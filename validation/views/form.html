@@ -5,10 +5,12 @@
         <p>Our service is fun and awesome, but you must be 13 years old to join.</p>
     </div>
 
-    <form id="submit">
+    <form name="signUpForm" id="submit">
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="text" class="form-control" id="email" placeholder="Email"/>
+            <label for="emailInp">Email:</label>
+            <input type="email" class="form-control" name="emailInp" id="emailInp" placeholder="Email" ng-model="user.email" required/>
+            <p class="validation-error" id="emailValidAlert" ng-if="signUpForm.emailInp.$error.email">Not valid email</p>
+            <p class="validation-error" id="emailReqdAlert" ng-if="signUpForm.emailInp.$dirty && signUpForm.emailInp.$error.required">Email is required</p>
         </div>
 
         <div class="form-group">

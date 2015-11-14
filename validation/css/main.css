@@ -14,3 +14,14 @@ h1, h2 {
 .button-group {
     margin-top: 1.5em;
 }
+
+.validation-error {
+    color: #dd1531;
+    font-size: 0.8em;
+}
+
+form .ng-dirty.ng-invalid {
+    border: 1px solid #dd1531; }
+
+form .ng-dirty.ng-valid {
+    border: 1px solid #00DD00; }
