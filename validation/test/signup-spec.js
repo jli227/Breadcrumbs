@@ -1,6 +1,7 @@
 describe('paintberi sign-up app', function() {
     var emailInp = element(by.model('user.email'));
     var dobInp = element(by.model('user.dob'));
+    var lastNameInp = element(by.model('user.lastName'));
 
     function addEmail(text) {
         emailInp.sendKeys(text);
@@ -64,5 +65,22 @@ describe('paintberi sign-up app', function() {
 		//type an invalid date -> no error
     	dobInp.sendKeys('11/15/05');
     	expect(dobValid.isPresent()).toEqual(true);
+    });
+
+    //test for required last name
+    it('must display warning if last name is not present', function () {
+    	var lastNameReq = element(by.id('lastNameAlert'));
+
+    	expect(lastNameReq.isPresent()).toEqual(false);
+
+    	lastNameInp.sendKeys('Lastname');
+		expect(lastNameReq.isPresent()).toEqual(false);    	
+
+		lastNameInp.sendKeys('Lastname');
+		lastNameInp.clear();
+		expect(lastNameReq.isPresent()).toEqual(true);    			
+
+		lastNameInp.sendKeys('    ');
+		expect(lastNameReq.isPresent()).toEqual(true);    	
     });
 });

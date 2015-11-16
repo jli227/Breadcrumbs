@@ -23,7 +23,22 @@
 
         <div class="form-group">
             <label for="lname">Last Name:</label>
-            <input type="text" class="form-control" id="lname" placeholder="Last Name"/>
+            <input 
+                name="lname"
+                ng-model="user.lastName"
+                type="text" 
+                class="form-control" 
+                id="lname" 
+                placeholder="Last Name"
+                required
+            />
+            <p
+                class="validation-error"
+                ng-if="signUpForm.lname.$dirty && signUpForm.lname.$error.required"
+                id="lastNameAlert"
+            >
+                Last name is required.
+            </p>
         </div>
 
         <div class="form-group">
