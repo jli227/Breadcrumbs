@@ -12,16 +12,25 @@ h1, h2 {
 }
 
 .button-group {
-    margin-top: 1.5em;
+    margin-top: 5em;
+    text-align: center;
 }
 
 .validation-error {
     color: #dd1531;
     font-size: 0.8em;
+    text-align: center;
 }
 
 form .ng-dirty.ng-invalid {
-    border: 1px solid #dd1531; }
+    border: 1px solid #dd1531;
+}
 
 form .ng-dirty.ng-valid {
-    border: 1px solid #00DD00; }
+    border: 1px solid #00DD00;
+}
+
+.fixed-width {
+    width: 50%;
+    margin-top: 5px;
+}
