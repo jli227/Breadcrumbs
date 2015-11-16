@@ -6,21 +6,19 @@ angular.module('ValidationApp', ['ui.router'])
                 templateUrl: 'views/form.html',
                 controller: 'FormController'
             });
-
         $urlRouterProvider.otherwise('/form');
     })
     .controller('FormController', function($scope) {
-
         $scope.user = {};
-
     })
-    .directive('checkBirthdate', function () {
+    //checks birthday month making sure its a valid month number.
+    .directive('checkBirthdate', function() {
         return {
             require: 'ngModel',
             link: function (scope, elem, attrs, controller) {
                 controller.$validators.checkBirthdate = function (modelValue) {
                     var userDate = Date.parse(modelValue);
-                    if (userDate != NaN) {
+                    if (!isNaN(userDate)) {
                         var thirteen = 13 * 365 * 24 * 3600 * 1000;                        
                         return (userDate <= Date.now() - thirteen);
                     }  
