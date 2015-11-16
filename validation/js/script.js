@@ -14,7 +14,6 @@ angular.module('ValidationApp', ['ui.router'])
         $scope.user = {};
 
     })
-        //checks credit card month making sure its a valid month number.
     .directive('checkBirthdate', function () {
         return {
             require: 'ngModel',
