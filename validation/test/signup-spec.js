@@ -2,6 +2,8 @@ describe('paintberi sign-up app', function() {
     var emailInp = element(by.model('user.email'));
     var dobInp = element(by.model('user.dob'));
     var lastNameInp = element(by.model('user.lastName'));
+    var passInp = element(by.model('user.password'));
+    var cpassInp = element(by.model('user.cPassword'));
 
     function addEmail(text) {
         emailInp.sendKeys(text);
@@ -22,12 +24,13 @@ describe('paintberi sign-up app', function() {
     	//spaces input, alert
     	dobInp.sendKeys('    ');
     	expect(elem.isPresent()).toEqual(true);
-    }    
+    }
 
     beforeEach(function() {
        browser.get('http://localhost:8000');
     });
 
+    // test for email
     it('must have display warning if email is not valid', function() {
         var emailAlertValid = element(by.id('emailValidAlert'));
         var emailAlertReqd = element(by.id('emailReqdAlert'));
@@ -82,5 +85,19 @@ describe('paintberi sign-up app', function() {
 
 		lastNameInp.sendKeys('    ');
 		expect(lastNameReq.isPresent()).toEqual(true);    	
+    });
+
+    // test for the success message
+    it('must display success message if login is successful', function() {
+        var success = element(by.id('successAlert'));
+
+        expect(success.isPresent()).toEqual(false);
+
+        addEmail('a@a.com');
+        dobInp.sendKeys('11/15/1994');
+        lastNameInp.sendKeys('Lastname');
+        passInp.sendKeys('a');
+        cpassInp.sendKeys('a');
+        expect(success.isPresent()).toEqual(true);
     });
 });

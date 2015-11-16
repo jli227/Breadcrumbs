@@ -10,6 +10,12 @@ angular.module('ValidationApp', ['ui.router'])
     })
     .controller('FormController', function($scope) {
         $scope.user = {};
+        $scope.loginSuccess = false;
+
+        $scope.signup = function() {
+            $scope.loginSuccess = true;
+            console.log('done');
+        }
     })
     //checks birthday month making sure its a valid month number.
     .directive('checkBirthdate', function() {

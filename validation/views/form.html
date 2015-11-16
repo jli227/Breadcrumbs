@@ -1,8 +1,10 @@
 <div class="container">
-    <div class="page-header">
+    <div class="page-header text-center">
         <h1>Sign Up!</h1>
         <p>Our service is fun and awesome, but you must be 13 years old to join.</p>
     </div>
+
+    <p id='successAlert' class="alert alert-success" ng-show="loginSuccess">Welcome. You have successfully signed in.</p>
     <form name="signUpForm" id="submit" ng-model="user" class="form-horizontal" novalidate>
         <div class="form-group">
             <label for="emailInp" class="col-sm-5 control-label">Email:</label>
@@ -74,7 +76,7 @@
 
         <div class="form-group button-group">
             <button type="reset" class="btn btn-default">Reset</button>
-            <button type="submit" class="btn btn-primary" ng-disabled="signUpForm.$invalid">Sign Me Up!</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="signUpForm.$invalid" ng-click="signup()">Sign Me Up!</button>
         </div>
 
     </form>
