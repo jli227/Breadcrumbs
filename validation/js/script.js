@@ -10,5 +10,5 @@ angular.module('ValidationApp', ['ui.router'])
         $urlRouterProvider.otherwise('/form');
     })
     .controller('FormController', function($scope) {
-
+        $scope.user = {};
     });
