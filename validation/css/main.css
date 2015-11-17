@@ -34,3 +34,9 @@ form .ng-dirty.ng-valid {
     width: 50%;
     margin-top: 2px;
 }
+
+#passwordStrength {
+    margin-top: 10px;
+    margin-bottom: 5px;    
+    width: 50%;
+}
