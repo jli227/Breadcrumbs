@@ -12,6 +12,11 @@ angular.module('ValidationApp', ['ui.router'])
         $scope.user = {};
         $scope.loginSuccess = false;
 
+        $scope.reset = function () {
+            $scope.user = {};
+            $scope.strength = 0;
+        }
+
         $scope.signup = function() {
             $scope.loginSuccess = true;
         };
