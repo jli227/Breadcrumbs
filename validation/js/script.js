@@ -14,11 +14,9 @@ angular.module('ValidationApp', ['ui.router'])
 
         $scope.signup = function() {
             $scope.loginSuccess = true;
-            console.log('done');
-        }
+        };
 
         $scope.checkPasswordStrength = function () {
-            console.log($scope.user.password);
             //password strength algorithm
             //0 = no password entered
             //1 = all lowercase
@@ -27,11 +25,31 @@ angular.module('ValidationApp', ['ui.router'])
             //+1 if symbol exists -> which symbols do we want to consider?
             //+1 for longer length -> what length is considered "long"?
             //total = 5
+
+            // sets amount of characters for safe password
+            var safeLength = 8;
+
+            // checks if password has been erased
+            var erasedPassword = $scope.user.password != undefined;
+
+            // checks the password against these boolean statements
+            var passwordChecks = [
+                erasedPassword && /[a-z]/.test($scope.user.password), // checks for lowercase letters
+                /[A-Z]/.test($scope.user.password), // checks for uppercase letters
+                /\d/.test($scope.user.password), // checks for numbers
+                /\W/.test($scope.user.password), // checks for symbols
+                erasedPassword && $scope.user.password.length >= safeLength];
             
-            //set the resulting strength to this variable
-            var result = 1;
+            // total score given to the user password
+            var result = passwordChecks.reduce(function(count, item) {
+                if (item) {
+                    return count += 1;
+                }
+                return count;
+            });
+
             //convert to percent
-            $scope.strength = (result / 5) * 100;
+            $scope.strength = (result / passwordChecks.length) * 100;
         }
     })
     //checks birthday month making sure its a valid month number.

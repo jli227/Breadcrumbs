@@ -13,6 +13,9 @@ describe('paintberi sign-up app', function() {
     beforeEach(function() {
         //ena's path
         browser.get('http://localhost:8000/#/form');
+
+        //vince's path
+        //browser.get('http://localhost:8000');
     });
 
     // test for email
