@@ -16,6 +16,23 @@ angular.module('ValidationApp', ['ui.router'])
             $scope.loginSuccess = true;
             console.log('done');
         }
+
+        $scope.checkPasswordStrength = function () {
+            console.log($scope.user.password);
+            //password strength algorithm
+            //0 = no password entered
+            //1 = all lowercase
+            //+1 if uppercase exists
+            //+1 if number exists
+            //+1 if symbol exists -> which symbols do we want to consider?
+            //+1 for longer length -> what length is considered "long"?
+            //total = 5
+            
+            //set the resulting strength to this variable
+            var result = 1;
+            //convert to percent
+            $scope.strength = (result / 5) * 100;
+        }
     })
     //checks birthday month making sure its a valid month number.
     .directive('checkBirthdate', function() {

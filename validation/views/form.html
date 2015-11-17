@@ -70,13 +70,31 @@
         <div class="form-group">
             <label for="password" class="col-sm-5 control-label">Password:</label>
             <div class="col-sm-7">
-                <input type="password" class="form-control fixed-width" name="password" id="password"
-                       placeholder="Password" ng-model="user.password" required/>
+                <input 
+                    type="password" 
+                    class="form-control fixed-width" 
+                    name="password" 
+                    id="password"
+                    placeholder="Password" 
+                    ng-model="user.password" 
+                    ng-change="checkPasswordStrength()"
+                    required
+                />
+
+                <div 
+                    class="progress" 
+                    id="passwordStrength"
+                    ng-show="signUpForm.password.$dirty"
+                >
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{strength}}" aria-valuemin="0" aria-valuemax="100" style="width: {{strength}}%"></div>
+                </div>
             </div>
 
             <p id="passwordReqError" class="validation-error" ng-if="signUpForm.password.$dirty && signUpForm.password.$error.required">
                 Please enter a password.
             </p>
+
+            
         </div>
 
         <div id="form-group">
