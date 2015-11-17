@@ -4,6 +4,7 @@ describe('paintberi sign-up app', function() {
     var lastNameInp = element(by.model('user.lname'));
     var passwordInp = element(by.model('user.password'));
     var cPasswordInp = element(by.model('user.cPassword'));
+    var signupBtn = element(by.buttonText('Sign Me Up!'));
 
     function addEmail(text) {
         emailInp.sendKeys(text);
@@ -24,13 +25,15 @@ describe('paintberi sign-up app', function() {
     	//spaces input, alert
     	dobInp.sendKeys('    ');
     	expect(elem.isPresent()).toEqual(true);
+
         dobInp.clear();
     }
 
     beforeEach(function() {
-       browser.get('http://localhost:8000/validation/#/form');
+       browser.get('http://localhost:8000');
     });
 
+    // test for email
     it('must have display warning if email is not valid', function() {
         var emailAlertValid = element(by.id('emailValidAlert'));
         var emailAlertReqd = element(by.id('emailReqAlert'));
@@ -112,5 +115,23 @@ describe('paintberi sign-up app', function() {
         passwordInp.sendKeys('test');
         cPasswordInp.sendKeys('testfail');
         expect(passwordMatch.isPresent()).toEqual(true);
+    });
+
+    // test for the success message
+    it('must only allow user to sign up if all forms are filled out and then display success message', function() {
+        var success = element(by.id('successAlert'));
+
+        expect(signupBtn.getAttribute('disabled')).toEqual('true');
+        expect(success.getAttribute('class')).toContain('ng-hide');
+
+        addEmail('a@a.com');
+        lastNameInp.sendKeys('Lastname');
+        dobInp.sendKeys('11/15/1994');
+        passwordInp.sendKeys('pass');
+        cPasswordInp.sendKeys('pass');
+
+        expect(signupBtn.getAttribute('disabled')).toBe(null);
+        signupBtn.click();
+        expect(success.getAttribute('class')).not.toContain('ng-hide');
     });
 });
