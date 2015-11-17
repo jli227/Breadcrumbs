@@ -86,7 +86,15 @@
                     id="passwordStrength"
                     ng-show="signUpForm.password.$dirty"
                 >
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{strength}}" aria-valuemin="0" aria-valuemax="100" style="width: {{strength}}%"></div>
+                    <div 
+                        id="passwordStrengthBar" 
+                        class="progress-bar" 
+                        role="progressbar" 
+                        aria-valuenow="{{strength}}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100" 
+                        style="width: {{strength}}%"
+                    ></div>
                 </div>
             </div>
 

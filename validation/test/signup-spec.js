@@ -8,6 +8,9 @@ describe('paintberi sign-up app', function() {
     var signupBtn = element(by.buttonText('Sign Me Up!'));
     var resetBtn = element(by.buttonText('Reset'));
 
+    var strengthElem = element(by.id('passwordStrength')),
+        strengthBar = element(by.id('passwordStrengthBar'));
+
     function addEmail(text) {
         emailInp.sendKeys(text);
     }
@@ -36,6 +39,13 @@ describe('paintberi sign-up app', function() {
         expect(dobInp.getAttribute('class')).toContain('ng-dirty');
         expect(passwordInp.getAttribute('class')).toContain('ng-dirty');
         expect(cPasswordInp.getAttribute('class')).toContain('ng-dirty');
+    }
+
+    function testPasswordBar(password, strength) {
+        passwordInp.sendKeys(password);
+        expect(strengthElem.getAttribute('class')).not.toContain('ng-hide');
+        expect(strengthBar.getAttribute('aria-valuenow')).toEqual(strength);
+        passwordInp.clear();
     }
 
     beforeEach(function() {
@@ -225,5 +235,26 @@ describe('paintberi sign-up app', function() {
         expect(emailInp.getAttribute('class')).toContain('ng-dirty');
         expect(lastNameInp.getAttribute('class')).toContain('ng-dirty');
         expect(signupBtn.getAttribute('disabled')).toEqual('true');
-    })
+    });
+  
+    it('must display password strength based on password input', function () {
+        //on render
+        expect(strengthElem.getAttribute('class')).toContain('ng-hide');
+
+        testPasswordBar('hello', '20');
+
+        //testing clear()        
+        expect(strengthElem.getAttribute('class')).not.toContain('ng-hide');
+        expect(strengthBar.getAttribute('aria-valuenow')).toEqual('0');
+    
+        testPasswordBar('helloeightchars', '40');
+        testPasswordBar('hello5', '40');
+        testPasswordBar('Hello5', '60');
+        testPasswordBar('Hello5!', '80');
+        testPasswordBar('Helloeightchars5!', '100');
+        //4 spaces
+        testPasswordBar('    ', '20');
+        //9 spaces
+        testPasswordBar('         ', '40');
+    });
 });
