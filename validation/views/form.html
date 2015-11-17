@@ -34,18 +34,36 @@
         </div>
 
         <div class="form-group">
-            <label for="birthdate" class="col-sm-5 control-label">Birthdate:</label>
+            <label for="birthdate" class="col-sm-5 control-label">Date of Birth:</label>
             <div class="col-sm-7">
                 <input ng-model="user.dob" name="dob" type="text" class="form-control fixed-width" id="birthdate" placeholder="Birthdate"
-                       required check-birthdate/>
+                       required 
+                       check-birthdate
+                       pattern="^(\d{2}\/){2}(\d{2}|\d{4})$"
+                />
             </div>
 
-            <p class="validation-error" ng-if="signUpForm.dob.$dirty && signUpForm.dob.$error.required" id="dobReqAlert">
+            <p 
+                class="validation-error" 
+                ng-if="signUpForm.dob.$dirty && signUpForm.dob.$error.required" 
+                id="dobReqAlert">
                 Please enter your date of birth.
             </p>
 
-            <p class="validation-error" ng-if="signUpForm.dob.$dirty && signUpForm.dob.$error.checkBirthdate" id="dobValidAlert">
+            <p 
+                class="validation-error" 
+                ng-if="signUpForm.dob.$dirty && signUpForm.dob.$error.checkBirthdate && !signUpForm.dob.$error.required" 
+                id="dobYoungAlert"
+            >
                 Sorry! You're not old enough. Please come back when you're at least 13 years old.
+            </p>
+
+            <p 
+                class="validation-error" 
+                ng-if="signUpForm.dob.$dirty && signUpForm.dob.$error.pattern" 
+                id="dobValidAlert"
+            >
+                Date of birth must be MM/DD/YYYY or MM/DD/YY
             </p>
         </div>
 
