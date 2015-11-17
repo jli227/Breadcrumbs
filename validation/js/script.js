@@ -21,14 +21,27 @@ angular.module('ValidationApp', ['ui.router'])
     .directive('checkBirthdate', function() {
         return {
             require: 'ngModel',
-            link: function (scope, elem, attrs, controller) {
-                controller.$validators.checkBirthdate = function (modelValue) {
+            link: function(scope, elem, attrs, controller) {
+                controller.$validators.checkBirthdate = function(modelValue) {
                     var userDate = Date.parse(modelValue);
                     if (!isNaN(userDate)) {
-                        var thirteen = 13 * 365 * 24 * 3600 * 1000;                        
+                        var thirteen = 13 * 365 * 24 * 3600 * 1000;
                         return (userDate <= Date.now() - thirteen);
-                    }  
-                    return false;                  
+                    }
+                    return false;
+                }
+            }
+        }
+    })
+    .directive('isMatching', function() {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function(scope, elem, attrs, controller) {
+                controller.$validators.isMatching = function(value) {
+                    console.log(value);
+                    console.log(scope.$eval(attrs.isMatching));
+                    return value == scope.$eval(attrs.isMatching);
                 }
             }
         }
