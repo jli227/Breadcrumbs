@@ -10,25 +10,6 @@ describe('paintberi sign-up app', function() {
         emailInp.sendKeys(text);
     }
 
-    function validateDob(elem) {
-    	//page rendered, no alert
-    	expect(elem.isPresent()).toEqual(false);
-
-    	//valid date, no alert
-    	dobInp.sendKeys('11/15/1994');
-    	expect(elem.isPresent()).toEqual(false);
-
-    	//clear input, alert
-    	dobInp.clear();
-    	expect(elem.isPresent()).toEqual(true);
-
-    	//spaces input, alert
-    	dobInp.sendKeys('    ');
-    	expect(elem.isPresent()).toEqual(true);
-
-        dobInp.clear();
-    }
-
     beforeEach(function() {
        browser.get('http://localhost:8000');
     });
@@ -55,22 +36,75 @@ describe('paintberi sign-up app', function() {
     it('must have display warning if birth date is not present', function () {
     	var dobReq = element(by.id('dobReqAlert'));
 
-    	validateDob(dobReq);
+    	//page rendered, no alert
+    	expect(dobReq.isPresent()).toEqual(false);
 
-		//type an invalid date -> no error
+    	//valid date, no alert
+    	dobInp.sendKeys('11/15/1994');
+    	expect(dobReq.isPresent()).toEqual(false);
+
+		//type a too-young date -> no error
     	dobInp.sendKeys('11/15/05');
     	expect(dobReq.isPresent()).toEqual(false);
     });
 
     //test for 13 years or older
     it('must have display warning if user is not 13 or older', function () {
-    	var dobValid = element(by.id('dobValidAlert'));
+    	var dobYoung = element(by.id('dobYoungAlert'));
+    	
+    	//page rendered, no alert
+    	expect(dobYoung.isPresent()).toEqual(false);
 
-    	validateDob(dobValid);
+    	//valid date, no alert
+    	dobInp.sendKeys('11/15/1994');
+    	expect(dobYoung.isPresent()).toEqual(false);
 
 		//type an invalid date -> no error
     	dobInp.sendKeys('11/15/05');
+    	expect(dobYoung.isPresent()).toEqual(true);
+
+    	//clear input, no alert <- considered empty not invalid
+    	dobInp.clear();
+    	expect(dobYoung.isPresent()).toEqual(false);
+
+    	//spaces input, no alert <- considered empty not invalid
+    	dobInp.sendKeys('    ');
+    	expect(dobYoung.isPresent()).toEqual(false);       	
+    });
+
+    //test for valid date
+    it('must have display warning if user did not give a valid date', function () {
+    	var dobValid = element(by.id('dobValidAlert'));
+
+    	//page render
+    	expect(dobValid.isPresent()).toEqual(false);
+    	
+    	dobInp.sendKeys('november 15, 2005');
     	expect(dobValid.isPresent()).toEqual(true);
+    	dobInp.clear();
+    	
+    	dobInp.sendKeys('nov 15, 2005');
+    	expect(dobValid.isPresent()).toEqual(true);
+    	dobInp.clear();
+
+    	dobInp.sendKeys('november 15, 2001');
+    	expect(dobValid.isPresent()).toEqual(true);
+    	dobInp.clear();
+
+    	dobInp.sendKeys('nov 15, 2005');
+    	expect(dobValid.isPresent()).toEqual(true);
+    	dobInp.clear();
+
+    	dobInp.sendKeys('11/15/01');
+    	expect(dobValid.isPresent()).toEqual(false);    	
+
+    	//clear input, no alert <- considered empty not invalid    	
+    	dobInp.clear();
+    	expect(dobValid.isPresent()).toEqual(false);
+
+    	//spaces input, no alert <- considered empty not invalid
+    	dobInp.sendKeys('    ');
+    	expect(dobValid.isPresent()).toEqual(false);      	
     });
 
     //test for required last name
