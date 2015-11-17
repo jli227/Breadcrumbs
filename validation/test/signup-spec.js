@@ -1,13 +1,41 @@
 describe('paintberi sign-up app', function() {
-    var emailInp = element(by.model('user.email'));
-    var dobInp = element(by.model('user.dob'));
+    var emailInp = element(by.model('user.email'));    
+    var firstNameInp = element(by.model('user.fname'));
     var lastNameInp = element(by.model('user.lname'));
+    var dobInp = element(by.model('user.dob'));
     var passwordInp = element(by.model('user.password'));
     var cPasswordInp = element(by.model('user.cPassword'));
     var signupBtn = element(by.buttonText('Sign Me Up!'));
+    var resetBtn = element(by.buttonText('Reset'));
 
     function addEmail(text) {
         emailInp.sendKeys(text);
+    }
+
+    function fieldsAreBlank() {
+        expect(emailInp.getAttribute('value')).toEqual('');
+        expect(firstNameInp.getAttribute('value')).toEqual('');
+        expect(lastNameInp.getAttribute('value')).toEqual('');
+        expect(dobInp.getAttribute('value')).toEqual('');
+        expect(passwordInp.getAttribute('value')).toEqual('');
+        expect(cPasswordInp.getAttribute('value')).toEqual('');
+    }
+
+    function sendAllKeys() {
+        emailInp.sendKeys('a@a.com');
+        firstNameInp.sendKeys('firstname');
+        lastNameInp.sendKeys('lastname');
+        dobInp.sendKeys('11/15/94');
+        passwordInp.sendKeys('password');
+        cPasswordInp.sendKeys('password');
+    }
+
+    function fieldsAreDirty() {
+        expect(emailInp.getAttribute('class')).toContain('ng-dirty');
+        expect(lastNameInp.getAttribute('class')).toContain('ng-dirty');
+        expect(dobInp.getAttribute('class')).toContain('ng-dirty');
+        expect(passwordInp.getAttribute('class')).toContain('ng-dirty');
+        expect(cPasswordInp.getAttribute('class')).toContain('ng-dirty');
     }
 
     beforeEach(function() {
@@ -172,4 +200,30 @@ describe('paintberi sign-up app', function() {
         signupBtn.click();
         expect(success.getAttribute('class')).not.toContain('ng-hide');
     });
+
+    //test for reset button
+    it('must clear fields on reset', function () {
+        //page render
+        expect(signupBtn.getAttribute('disabled')).toEqual('true');
+        resetBtn.click();
+        fieldsAreBlank();        
+
+        sendAllKeys();
+        expect(signupBtn.getAttribute('disabled')).toBe(null);
+        resetBtn.click();
+        fieldsAreBlank();
+        expect(signupBtn.getAttribute('disabled')).toEqual('true');
+        fieldsAreDirty();
+
+        browser.refresh();
+
+        emailInp.sendKeys('a@a.com');
+        lastNameInp.sendKeys('lastname');
+        expect(signupBtn.getAttribute('disabled')).toEqual('true');
+        resetBtn.click();
+        fieldsAreBlank();
+        expect(emailInp.getAttribute('class')).toContain('ng-dirty');
+        expect(lastNameInp.getAttribute('class')).toContain('ng-dirty');
+        expect(signupBtn.getAttribute('disabled')).toEqual('true');
+    })
 });
