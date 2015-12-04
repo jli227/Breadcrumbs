@@ -31,6 +31,7 @@ form .ng-dirty.ng-valid {
     border: 1px solid #00DD00;
 }
 
-.coming-soon {
-    font-size: 60px;
+img {
+    margin-left: auto;
+    margin-right: auto;
 }
