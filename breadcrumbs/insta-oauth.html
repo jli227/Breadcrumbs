@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+	</head>
+	<body>
+		<script>
+			var callBackResponse = window.location.hash;
+			// window.localStorage.setItem('insta', callBackResponse);
+			// console.log(callBackResponse);
+			var responseParams = callBackResponse.split('&');
+			// console.log(responseParams);
+			responseParams.forEach(function (response) {
+				response = response.split('=');
+				if (response[0] === '#access_token') {
+					window.localStorage.setItem('accessToken', response[1]);
+				}
+
+			});
+			window.location.href = 'http://localhost:8000/#/main';
+		</script>
+	</body>
+</html>
