@@ -1,8 +1,41 @@
-<div class="container text-center">
-    <div class="page-header">
-        <h1>Welcome {{currentUser.name}}.</h1>
-        <img src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" ng-click="isCollapsed = !isCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">breadcrumbs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">Personal</a></li>
+                <li><a href="#">View others</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
+                <!--TODO add sign-out f(x)-->
+                <li><a href="">{{currentUser.name}} (click to sign out)</a></li>
+            </ul>
+        </div>
     </div>
-    <p>You have been authenticated :)</p>
+</nav>
 
+<div class="body-start container text-center">
+    <div class="page-header">
+        <h1>Welcome {{currentUser.name}}</h1>
+        <img ng-src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
+    </div>
+
+    <h2>Your pictures</h2>
+    <div ng-repeat="url in selfRecentPhotos">
+        <div class="col-xs-6 col-md-3">
+            <a href="#" class="thumbnail">
+                <img ng-src="{{url}}">
+            </a>
+        </div>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-angular.module('BreadcrumbsApp', ['ui.router'])
+angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('login', {
@@ -49,27 +49,49 @@ angular.module('BreadcrumbsApp', ['ui.router'])
         }
     })
     .controller('MainController', function($scope) {
+        // navbar collapse code
+        $scope.isCollapsed = true;
+
         // retrieve access token from local storage
         var accessToken = window.localStorage.getItem('accessToken');
 
         // base URL for self
-        var instaBase = 'https://api.instagram.com/v1/users/self/?access_token=';
+        var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=';
+
+        // base URL for self recent
+        var selfRecentBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
         // bypass security
         var urlEnd = '&callback=?';
 
+        // resync async stuff
+        $scope.resync = function() {
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        };
+
+
         // get current user data from Instagram
-        $.getJSON(instaBase + accessToken + urlEnd,
+        $.getJSON(selfBaseURL + accessToken + urlEnd,
             function(response) {
-                console.log(response.data);
                 $scope.currentUser = {
                     name: response.data.username,
                     id: response.data.id,
                     profPic: response.data.profile_picture
                 };
 
-                if (!$scope.$$phase) {
-                    $scope.$apply();
-                }
+                $scope.resync();
         });
+
+        // get most recent posts
+        $.getJSON(selfRecentBaseURL + accessToken + urlEnd,
+            function(response) {
+                $scope.selfRecentPhotos = _.pluck(response.data, 'images.standard_resolution.url');
+
+                console.log($scope.selfRecentPhotos);
+
+                $scope.resync();
+        });
+
     });
