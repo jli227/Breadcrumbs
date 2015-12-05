@@ -10,7 +10,28 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                 url: '/main',
                 templateUrl: 'views/main.html',
                 controller: 'MainController'
+            })
+            .state('main.photos', {
+                url: '/photos',
+                templateUrl: 'views/photos.html',
+                controller: 'MainController'
+            })
+            .state('main.ena', {
+                url: '/ena',
+                templateUrl: 'views/ena.html',
+                controller: 'EController'
+            })
+            .state('main.vince', {
+                url: '/vince',
+                templateUrl: 'views/vince.html',
+                controller: 'VController'
+            })
+            .state('main.johnathan', {
+                url: '/johnathan',
+                templateUrl: 'views/johnathan.html',
+                controller: 'JController'
             });
+
         $urlRouterProvider.otherwise('/login');
     })
     .controller('LoginController', function($scope) {

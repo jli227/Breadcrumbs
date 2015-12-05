@@ -1,0 +1,9 @@
+<h2>Your pictures</h2>
+<div ng-repeat="item in selfRecent">
+    <div class="col-xs-6 col-md-3 image-thumbnail">
+        <div class="thumbnail">
+            <img ng-src="{{item[0]}}">
+        </div>
+        <p>{{item[1]}} <i class="fa fa-heart"></i></p>
+    </div>
+</div>
