@@ -64,13 +64,12 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
         // bypass security
         var urlEnd = '&callback=?';
 
-        // resync async stuff
+        // resync async stuff - must call every time you use the JSONP requests
         $scope.resync = function() {
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
         };
-
 
         // get current user data from Instagram
         $.getJSON(selfBaseURL + accessToken + urlEnd,
@@ -87,9 +86,14 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
         // get most recent posts
         $.getJSON(selfRecentBaseURL + accessToken + urlEnd,
             function(response) {
-                $scope.selfRecentPhotos = _.pluck(response.data, 'images.standard_resolution.url');
+                var selfData = {
+                    recentPhotos: _.pluck(response.data, 'images.standard_resolution.url'),
+                    recentLikes: _.pluck(response.data, 'likes.count')
+                };
 
-                console.log($scope.selfRecentPhotos);
+                $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
+
+                console.log(response);
 
                 $scope.resync();
         });

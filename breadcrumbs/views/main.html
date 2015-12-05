@@ -1,5 +1,5 @@
 <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" ng-click="isCollapsed = !isCollapsed">
                 <span class="sr-only">Toggle navigation</span>
@@ -11,9 +11,9 @@
         </div>
         <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Personal</a></li>
-                <li><a href="#">View others</a></li>
+                <li class="active"><a href="#">home</a></li>
+                <li><a href="#">personal</a></li>
+                <li><a href="#">view others</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
@@ -31,11 +31,12 @@
     </div>
 
     <h2>Your pictures</h2>
-    <div ng-repeat="url in selfRecentPhotos">
-        <div class="col-xs-6 col-md-3">
-            <a href="#" class="thumbnail">
-                <img ng-src="{{url}}">
-            </a>
+    <div ng-repeat="item in selfRecent">
+        <div class="col-xs-6 col-md-3 image-thumbnail">
+            <div class="thumbnail">
+                <img ng-src="{{item[0]}}">
+            </div>
+            <p>{{item[1]}} <i class="fa fa-heart"></i></p>
         </div>
     </div>
 </div>
