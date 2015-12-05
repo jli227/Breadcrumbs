@@ -48,7 +48,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             window.location.href = url;
         }
     })
-    .controller('MainController', function($scope, $state) {
+    .controller('MainController', function($scope, $state, $http) {
         // retrieve access token from local storage
         var accessToken = window.localStorage.getItem('accessToken');
 
@@ -62,7 +62,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             var selfRecentBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
             // bypass security
-            var urlEnd = '&callback=?';
+            var urlEnd = '&callback=JSON_CALLBACK';
 
             // resync async stuff - must call every time you use the JSONP requests
             $scope.resync = function() {
@@ -72,30 +72,40 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             };
 
             // get current user data from Instagram
-            $.getJSON(selfBaseURL + accessToken + urlEnd,
+            $http.jsonp(selfBaseURL + accessToken + urlEnd,
                 function(response) {
-                    $scope.currentUser = {
-                        name: response.data.username,
-                        id: response.data.id,
-                        profPic: response.data.profile_picture
-                    };
+                    console.log(response.data);
 
-                    $scope.resync();
+                    $scope.currentUser = {
+                        name: response.data.data.username,
+                        id: response.data.data.id,
+                        profPic: response.data.data.profile_picture
+                    };
                 });
 
             // get most recent posts
-            $.getJSON(selfRecentBaseURL + accessToken + urlEnd,
-                function(response) {
+            $http.jsonp(selfRecentBaseURL + accessToken + urlEnd)
+                .then(function(response) {
                     var selfData = {
-                        recentPhotos: _.pluck(response.data, 'images.standard_resolution.url'),
-                        recentLikes: _.pluck(response.data, 'likes.count')
+                        recentPhotos: _.pluck(response.data.data, 'images.standard_resolution.url'),
+                        recentLikes: _.pluck(response.data.data, 'likes.count')
                     };
 
                     $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
 
-                    console.log(response);
+                    console.log(response.data.data);
+                });
 
-                    $scope.resync();
+            // get current user data from Instagram
+            $http.jsonp(selfBaseURL + accessToken + urlEnd)
+                .then(function(response) {
+                    console.log(response.data);
+
+                    $scope.currentUser = {
+                        name: response.data.data.username,
+                        id: response.data.data.id,
+                        profPic: response.data.data.profile_picture
+                    };
                 });
         }
 
