@@ -17,12 +17,14 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
-                <!--TODO add sign-out f(x)-->
-                <li><a href="">{{currentUser.name}} (click to sign out)</a></li>
+
+                <li><a ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
             </ul>
         </div>
     </div>
 </nav>
+
+<div id="logout"></div>
 
 <div class="body-start container text-center">
     <div class="page-header">
