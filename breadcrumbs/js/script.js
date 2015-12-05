@@ -1,4 +1,4 @@
-angular.module('BreadcrumbsApp', ['ui.router'])
+angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('login', {
@@ -48,28 +48,67 @@ angular.module('BreadcrumbsApp', ['ui.router'])
             window.location.href = url;
         }
     })
-    .controller('MainController', function($scope) {
+    .controller('MainController', function($scope, $state) {
         // retrieve access token from local storage
         var accessToken = window.localStorage.getItem('accessToken');
 
-        // base URL for self
-        var instaBase = 'https://api.instagram.com/v1/users/self/?access_token=';
+        if (!accessToken) {
+            $state.go('login');
+        } else {
+            // base URL for self
+            var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=';
 
-        // bypass security
-        var urlEnd = '&callback=?';
+            // base URL for self recent
+            var selfRecentBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
-        // get current user data from Instagram
-        $.getJSON(instaBase + accessToken + urlEnd,
-            function(response) {
-                console.log(response.data);
-                $scope.currentUser = {
-                    name: response.data.username,
-                    id: response.data.id,
-                    profPic: response.data.profile_picture
-                };
+            // bypass security
+            var urlEnd = '&callback=?';
 
+            // resync async stuff - must call every time you use the JSONP requests
+            $scope.resync = function() {
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
-        });
+            };
+
+            // get current user data from Instagram
+            $.getJSON(selfBaseURL + accessToken + urlEnd,
+                function(response) {
+                    $scope.currentUser = {
+                        name: response.data.username,
+                        id: response.data.id,
+                        profPic: response.data.profile_picture
+                    };
+
+                    $scope.resync();
+                });
+
+            // get most recent posts
+            $.getJSON(selfRecentBaseURL + accessToken + urlEnd,
+                function(response) {
+                    var selfData = {
+                        recentPhotos: _.pluck(response.data, 'images.standard_resolution.url'),
+                        recentLikes: _.pluck(response.data, 'likes.count')
+                    };
+
+                    $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
+
+                    console.log(response);
+
+                    $scope.resync();
+                });
+        }
+
+        // navbar collapse code
+        $scope.isCollapsed = true;
+
+        // user logout
+        $scope.logout = function() {
+            window.localStorage.setItem('accessToken', '');
+
+            //TODO figure out logout while avoiding header issues with server
+            //$('#logout').html('<img src="https://instagram.com/accounts/logout/" width="0" height="0">');
+            //$state.go('login');
+        };
+
     });
