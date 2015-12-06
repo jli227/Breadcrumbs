@@ -6,10 +6,8 @@
 	<body>
 		<script>
 			var callBackResponse = window.location.hash;
-			// window.localStorage.setItem('insta', callBackResponse);
-			// console.log(callBackResponse);
 			var responseParams = callBackResponse.split('&');
-			// console.log(responseParams);
+			
 			responseParams.forEach(function (response) {
 				response = response.split('=');
 				if (response[0] === '#access_token') {
@@ -19,7 +17,9 @@
 			});
 
 			// dependent on IDE/server setup.
-			window.location.href = 'http://localhost:8000/paintberi/breadcrumbs/index.html#/main';
+			var vincentUrl = 'http://localhost:8000/paintberi/breadcrumbs/index.html#/main';
+			var enaUrl = 'http://localhost:8000/index.html#/main';
+			window.location.href = enaUrl;
 		</script>
 	</body>
 </html>
