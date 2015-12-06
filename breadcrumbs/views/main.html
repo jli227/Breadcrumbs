@@ -12,8 +12,6 @@
         <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">home</a></li>
-                <li><a href="#">personal</a></li>
-                <li><a href="#">view others</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
@@ -32,13 +30,12 @@
         <img ng-src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
     </div>
 
-    <h2>Your pictures</h2>
-    <div ng-repeat="item in selfRecent">
-        <div class="col-xs-6 col-md-3 image-thumbnail">
-            <div class="thumbnail">
-                <img ng-src="{{item[0]}}">
-            </div>
-            <p>{{item[1]}} <i class="fa fa-heart"></i></p>
-        </div>
-    </div>
+    <ul class="options nav nav-tabs nav-justified">
+        <li role="presentation" ui-sref-active="active"><a ui-sref="main.photos()">Photos</a></li>
+        <li role="presentation" ui-sref-active="active"><a ui-sref="main.ena()">Ena's</a></li>
+        <li role="presentation" ui-sref-active="active"><a ui-sref="main.vince()">Vincent's</a></li>
+        <li role="presentation" ui-sref-active="active"><a ui-sref="main.johnathan()">Johnathan's</a></li>
+    </ul>
+
+    <div ui-view></div>
 </div>

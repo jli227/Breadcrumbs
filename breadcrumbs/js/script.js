@@ -10,7 +10,29 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                 url: '/main',
                 templateUrl: 'views/main.html',
                 controller: 'MainController'
+            })
+            .state('main.photos', {
+                url: '/photos',
+                templateUrl: 'views/photos.html',
+                controller: 'MainController'
+            })
+            .state('main.ena', {
+                url: '/ena',
+                templateUrl: 'views/ena.html',
+                controller: 'EController'
+            })
+            .state('main.vince', {
+                url: '/vince',
+                templateUrl: 'views/vince.html',
+                controller: 'VController'
+            })
+            .state('main.johnathan', {
+                url: '/johnathan',
+                templateUrl: 'views/johnathan.html',
+                controller: 'JController'
             });
+
+        //TODO create controllers
         $urlRouterProvider.otherwise('/login');
     })
     .controller('LoginController', function($scope) {
@@ -32,14 +54,13 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
 
             //TODO create paintberi instagram account to make universal clientID
 
-            //ena's clientID
-            //var clientID = 'e2fad0935d07402c9c5a68287915d997';
-            //ena's redirectURL
-            //var redirectUrl = 'http://localhost:8000/insta-oauth.html';
+            //ena's client stuff
+            var clientID = 'e2fad0935d07402c9c5a68287915d997';
+            var redirectUrl = 'http://localhost:8000/insta-oauth.html';
 
             //vince's client stuff
-            var clientID = 'ab1c06711b0046b995f3b42fd2ee5b33';
-            var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
+            // var clientID = 'ab1c06711b0046b995f3b42fd2ee5b33';
+            // var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
 
             var url = 'https://instagram.com/oauth/authorize/?client_id=' + 
                         clientID + '&redirect_uri=' + 
