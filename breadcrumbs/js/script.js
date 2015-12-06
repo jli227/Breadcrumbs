@@ -32,6 +32,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                 controller: 'JController'
             });
 
+        //TODO create controllers
         $urlRouterProvider.otherwise('/login');
     })
     .controller('LoginController', function($scope) {
