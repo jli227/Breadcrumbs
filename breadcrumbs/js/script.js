@@ -1,4 +1,18 @@
 angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
+    .factory('getUserData', function ($http) {
+        return function (baseUrl) {
+            var accessToken = window.localStorage.getItem('accessToken')
+                endUrl = '&callback=JSON_CALLBACK';            
+            return new Promise(function (resolve, reject) {
+                $http.jsonp(baseUrl + accessToken + endUrl)
+                    .then(function (response) {
+                        resolve(response.data.data);
+                    }, function (error) {
+                        reject(error);
+                    });
+            }); 
+       }        
+    })
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('login', {
@@ -69,7 +83,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             window.location.href = url;
         }
     })
-    .controller('MainController', function($scope, $state, $http) {
+    .controller('MainController', function($scope, $state, $http, getUserData) {
         // retrieve access token from local storage
         var accessToken = window.localStorage.getItem('accessToken');
 
@@ -80,54 +94,32 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=';
 
             // base URL for self recent
-            var selfRecentBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
-
-            // bypass security
-            var urlEnd = '&callback=JSON_CALLBACK';
-
-            // resync async stuff - must call every time you use the JSONP requests
-            $scope.resync = function() {
-                if (!$scope.$$phase) {
-                    $scope.$apply();
-                }
-            };
+            var selfMediaBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
             // get current user data from Instagram
-            $http.jsonp(selfBaseURL + accessToken + urlEnd,
-                function(response) {
-                    console.log(response.data);
-
+            getUserData(selfBaseURL)
+                .then(function (response) {
                     $scope.currentUser = {
-                        name: response.data.data.username,
-                        id: response.data.data.id,
-                        profPic: response.data.data.profile_picture
-                    };
+                        name: response.username,
+                        id: response.id,
+                        profPic: response.profile_picture
+                    }
+                }, function (error) {
+                    console.log(error);
                 });
-
+            
             // get most recent posts
-            $http.jsonp(selfRecentBaseURL + accessToken + urlEnd)
-                .then(function(response) {
+            getUserData(selfMediaBaseURL)
+                .then(function (response) {
                     var selfData = {
-                        recentPhotos: _.pluck(response.data.data, 'images.standard_resolution.url'),
-                        recentLikes: _.pluck(response.data.data, 'likes.count')
+                        recentPhotos: _.pluck(response, 'images.standard_resolution.url'),
+                        recentLikes: _.pluck(response, 'likes.count')
                     };
 
                     $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
-
-                    console.log(response.data.data);
-                });
-
-            // get current user data from Instagram
-            $http.jsonp(selfBaseURL + accessToken + urlEnd)
-                .then(function(response) {
-                    console.log(response.data);
-
-                    $scope.currentUser = {
-                        name: response.data.data.username,
-                        id: response.data.data.id,
-                        profPic: response.data.data.profile_picture
-                    };
-                });
+                }, function (error) {
+                    console.log(error);
+                })
         }
 
         // navbar collapse code
@@ -138,8 +130,17 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             window.localStorage.setItem('accessToken', '');
 
             //TODO figure out logout while avoiding header issues with server
-            //$('#logout').html('<img src="https://instagram.com/accounts/logout/" width="0" height="0">');
-            //$state.go('login');
+            $('#logout').html('<img src="https://instagram.com/accounts/logout/" width="0" height="0">');
+            $state.go('login');
         };
+
+    })
+    .controller('EController', function ($scope, getUserData) {
+        
+    })
+    .controller('VController', function ($scope) {
+
+    })
+    .controller('JController', function ($scope) {
 
     });
