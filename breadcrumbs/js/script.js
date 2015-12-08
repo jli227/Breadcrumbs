@@ -44,6 +44,11 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 url: '/johnathan',
                 templateUrl: 'views/johnathan.html',
                 controller: 'JController'
+            })
+            .state('privacy', {
+                url: '/privacy',
+                templateUrl: 'views/privacy.html',
+                controller: "MainController"
             });
 
         //TODO create controllers

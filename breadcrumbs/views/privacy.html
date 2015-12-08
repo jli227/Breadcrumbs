@@ -11,8 +11,8 @@
         </div>
         <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">home</a></li>
-                <li><a ui-sref="privacy()">Privacy Policy</a></li>
+                <li><a ui-sref="main()" href="#">home</a></li>
+                <li class="active"><a href="#" ui-sref="privacy()">Privacy Policy</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
@@ -22,21 +22,12 @@
         </div>
     </div>
 </nav>
+<div class="container">
 
-<div id="logout"></div>
-
-<div class="body-start container text-center">
-    <div class="page-header">
-        <h1>Welcome {{currentUser.name}}</h1>
-        <img ng-src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
-    </div>
-
-    <ul class="options nav nav-tabs nav-justified">
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main.photos()">Photos</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main.ena()">Ena's</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main.vince()">Vincent's</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main.johnathan()">Johnathan's</a></li>
-    </ul>
-
-    <div ui-view></div>
+	<div class="jumbotron">		
+		<h1>Privacy Policy</h1>
+		<p>
+			We do not sell or give user information to third-parties. We do not store your login credentials. 		All data collected is the data allowed by the Instagram API. All information used is to personalize user experience on our website.
+		</p>
+	</div>
 </div>
