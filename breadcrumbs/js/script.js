@@ -1,11 +1,12 @@
 angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .factory('getUserData', function ($http) {
-        return function (baseUrl, params) {
+        return function (baseUrl) {
             var accessToken = window.localStorage.getItem('accessToken')
                 endUrl = '&callback=JSON_CALLBACK'; 
             return new Promise(function (resolve, reject) {
-                $http.jsonp(baseUrl + accessToken + params + endUrl)
+                $http.jsonp(baseUrl + accessToken + endUrl)
                     .then(function (response) {
+                        console.log(response.pagination);
                         resolve(response.data.data);
                     }, function (error) {
                         reject(error);
@@ -102,15 +103,12 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             $state.go('login');
         } else {
             // base URL for self
-            var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=';
-
-            
-
+            var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=',
             // base URL for self recent
-            var selfMediaBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
+                selfMediaBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';    
 
             // get current user data from Instagram
-            getUserData(selfBaseURL, '')
+            getUserData(selfBaseURL)
                 .then(function (response) {
                     $scope.currentUser = {
                         name: response.username,
@@ -122,29 +120,17 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 });
             
             // get most recent posts
-            getUserData(selfMediaBaseURL, '')
+            getUserData(selfMediaBaseURL)
                 .then(function (response) {
+                    // console.log(response);
                     var selfData = {
                         recentPhotos: _.pluck(response, 'images.standard_resolution.url'),
                         recentLikes: _.pluck(response, 'likes.count')
-                    };
-
+                    };                  
                     $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
                 }, function (error) {
                     console.log(error);
-                });
-
-
-            // var userId = 402726334;
-            // var userBaseURL = 'https://api.instagram.com/v1/' + userId + '/self/?access_token=';
-            // getUserData(userBaseURL)
-            //     .then(function (response) {
-            //         console.log(response);
-            //     }, function (error) {
-            //         console.log(error);
-            //     });
-
-
+                });            
         }
 
         // navbar collapse code
@@ -190,80 +176,42 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             filterBucket = {},
             getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
-        getUserData(getMediaUrl, '')
-            .then(function (response) {
-                var data = [];
-                response.forEach(function (post) {
-                    var time = moment.unix(post.created_time),
-                        hour = time.hour(),
-                        minute = time.minute(),
-                        likes = post.likes.count,
-                        filter = post.filter;
+            getUserData(getMediaUrl)
+                .then(function (response) {
+                    var data = [];
+                    response.forEach(function (post) {
+                        var time = moment.unix(post.created_time), 
+                            hour = time.hour(),
+                            minute = time.minute(),
+                            likes = post.likes.count,
+                            filter = post.filter;
 
-                    likesBucket[hour].count++;
-                    likesBucket[hour].sum += likes;
-                    likesBucket[hour].avg = likesBucket[hour].sum / likesBucket[hour].count;
+                        likesBucket[hour].count++;
+                        likesBucket[hour].sum += likes;
+                        likesBucket[hour].avg = likesBucket[hour].sum / likesBucket[hour].count;             
 
-                    if (!filterBucket[filter]) {
-                        filterBucket[filter] = {};
-                        filterBucket[filter].count = 0;
-                        filterBucket[filter].sum = 0;
-                    }
-                    filterBucket[filter].count++;
-                    filterBucket[filter].sum += likes;
-                    filterBucket[filter].avg = filterBucket[filter].sum / filterBucket[filter].count;
-                });
+                        if (!filterBucket[filter]) {
+                            filterBucket[filter] = {};
+                            filterBucket[filter].count = 0;
+                            filterBucket[filter].sum = 0;
+                        }
+                        filterBucket[filter].count++;
+                        filterBucket[filter].sum += likes;
+                        filterBucket[filter].avg = filterBucket[filter].sum / filterBucket[filter].count;
+                    });   
 
-                $scope.likesLabels = Object.keys(likesBucket);
-                $scope.likesData = [_.pluck(likesBucket, 'avg')];
-                $scope.likesSeries = ['Time vs. Average Likes'];
+                    $scope.likesLabels = Object.keys(likesBucket);
+                    $scope.likesData = [_.pluck(likesBucket, 'avg')];
+                    $scope.likesSeries = ['Time vs. Average Likes'];
 
-                $scope.filterLabels = Object.keys(filterBucket);
-                $scope.filterData = [_.pluck(filterBucket, 'avg')];
-                $scope.filterSeries = ['Filter vs. Average Likes'];
+                    $scope.filterLabels = Object.keys(filterBucket);
+                    $scope.filterData = [_.pluck(filterBucket, 'avg')];
+                    $scope.filterSeries = ['Filter vs. Average Likes']
 
-                $scope.$apply();
-            }, function (error) {
-                console.log(error);
-            });
-    })
-    .controller('EController', function ($scope, getUserData) {
-        var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
-        getUserData(getMediaUrl)
-            .then(function (response) {
-                console.log(response);
-                var data = [];
-                response.forEach(function (post) {
-                    var time = moment.unix(post.created_time); 
-                    var hour = time.hour();
-                    var minute = time.minute();     
-
-                    var label = (hour > 12) ? hour - 12 : hour;
-                    label += ':';
-                    label += (minute < 10) ? '0' + minute : minute;
-                    label += (hour > 12) ? ' PM' : ' AM';
-
-                    data.push({
-                        hour: hour,
-                        minute: minute,
-                        label: label,
-                        likes: post.likes.count,
-                        info: post
-                    });                    
-                });   
-                data = _.sortByAll(data, ['hour', 'minute']);
-                
-                $scope.labels = _.pluck(data, 'label');
-                $scope.data = [_.pluck(data, 'likes')];
-                $scope.series = ['Time vs. Likes'];
-                $scope.onClick = function (points, evt) {
-                    console.log(points, evt);
-                };
-
-                $scope.$apply();
-            }, function (error) {
-                console.log(error);
-            });
+                    $scope.$apply();
+                }, function (error) {
+                    console.log(error);
+                });                     
     })
     .controller('VController', function ($scope) {
 
