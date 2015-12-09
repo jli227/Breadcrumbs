@@ -6,6 +6,16 @@
 body {
     font-family: "Open Sans", Helvetica, sans-serif;
     font-size: 16px;
+    color: #FCFFF5;
+    background-color: #FCFFF5;
+    font-weight: 300;
+}
+
+.header {
+    background-color: #3e606F;
+    color: #FCFFF5;
+    padding-top: 8em;
+    padding-bottom: 8em;
 }
 
 .body-start {
@@ -16,24 +26,11 @@ h1, h2, h3 {
     font-weight: 300;
 }
 
+.title {
+    font-family: "Just Another Hand";
+    font-size: 80px;
+}
+
 .navbar-brand {
     font-weight: 300;
-}
-
-img {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#navbar-user-pic {
-    max-height: 2em;
-    margin-top: 0.5em;
-}
-
-.image-thumbnail {
-    margin-bottom: 1em;
-}
-
-.thumbnail {
-    margin-bottom: 0.5em;
 }

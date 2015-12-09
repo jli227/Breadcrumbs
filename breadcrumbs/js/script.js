@@ -69,15 +69,15 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
             //TODO create paintberi instagram account to make universal clientID
 
             //ena's client stuff
-            var clientID = 'e2fad0935d07402c9c5a68287915d997';
-            var redirectUrl = 'http://localhost:8000/insta-oauth.html';
+            //var clientID = 'e2fad0935d07402c9c5a68287915d997';
+            //var redirectUrl = 'http://localhost:8000/insta-oauth.html';
 
             //vince's client stuff
-            // var clientID = 'ab1c06711b0046b995f3b42fd2ee5b33';
-            // var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
+             var clientID = 'ab1c06711b0046b995f3b42fd2ee5b33';
+             var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
 
             var url = 'https://instagram.com/oauth/authorize/?client_id=' + 
-                        clientID + '&redirect_uri=' + 
+                        clientID + '&scope=basic+public_content&redirect_uri=' +
                         redirectUrl + '&response_type=token';
 
             window.location.href = url;
@@ -90,8 +90,10 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
         if (!accessToken) {
             $state.go('login');
         } else {
+            //ena = 6865520
+
             // base URL for self
-            var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=';
+            var selfBaseURL = 'https://api.instagram.com/v1/users/402726334/?access_token=';
 
             // base URL for self recent
             var selfMediaBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
@@ -129,8 +131,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
         $scope.logout = function() {
             window.localStorage.setItem('accessToken', '');
 
-            //TODO figure out logout while avoiding header issues with server
-            $('#logout').html('<img src="https://instagram.com/accounts/logout/" width="0" height="0">');
             $state.go('login');
         };
 
