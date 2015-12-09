@@ -7,19 +7,18 @@
 		<script>
 			var callBackResponse = window.location.hash;
 			var responseParams = callBackResponse.split('&');
-			
+
 			responseParams.forEach(function (response) {
 				response = response.split('=');
 				if (response[0] === '#access_token') {
 					window.localStorage.setItem('accessToken', response[1]);
 				}
-
 			});
 
 			// dependent on IDE/server setup.
-			var vincentUrl = 'http://localhost:8000/paintberi/breadcrumbs/index.html#/main';
-			var enaUrl = 'http://localhost:8000/index.html#/main/photos';
-			window.location.href = enaUrl;
+			var webstormUrl = 'http://localhost:8000/paintberi/breadcrumbs/index.html#/main';
+			var sublimeUrl = 'http://localhost:8000/index.html#/main';
+			window.location.href = webstormUrl;
 		</script>
 	</body>
 </html>
