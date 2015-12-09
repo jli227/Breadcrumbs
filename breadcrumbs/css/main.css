@@ -2,6 +2,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css);
 @import url(https://fonts.googleapis.com/css?family=Just+Another+Hand);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,100,300italic);
 
 body {
     font-family: "Open Sans", Helvetica, sans-serif;
@@ -38,6 +39,7 @@ img {
     margin-bottom: 0.5em;
 }
 
-.jumbotron {
-    margin-top: 80px;
+.vis-options {
+    margin-top: 1em;
+    margin-bottom: 3em;
 }

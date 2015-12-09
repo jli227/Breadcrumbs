@@ -6,7 +6,7 @@
 body {
     font-family: "Open Sans", Helvetica, sans-serif;
     font-size: 16px;
-    color: #FCFFF5;
+    color: #193441;
     background-color: #FCFFF5;
     font-weight: 300;
 }
@@ -16,6 +16,8 @@ body {
     color: #FCFFF5;
     padding-top: 8em;
     padding-bottom: 8em;
+    /*border-bottom-left-radius: 50%;*/
+    /*border-bottom-right-radius: 50%;*/
 }
 
 .body-start {
@@ -33,4 +35,32 @@ h1, h2, h3 {
 
 .navbar-brand {
     font-weight: 300;
+}
+
+.follow-trail {
+    width: 10em;
+    height: 10em;
+    border-radius: 50%;
+    color: #FCFFF5;
+    background-color: #3E606F;
+    /*-webkit-transition: all 0.5s ease;*/
+    /*-moz-transition: all 0.5s ease;*/
+    /*-o-transition: all 0.5s ease;*/
+}
+
+.follow-trail:hover {
+    background-color: #91AA9D;
+    /*width: 12em;*/
+    /*height: 12em;*/
+}
+
+.fa-circle-thin:hover {
+    color: #91AA9D;
+}
+
+@media (max-width: 760px) {
+    .header {
+        padding-top: 5em;
+        padding-bottom: 5em;
+    }
 }

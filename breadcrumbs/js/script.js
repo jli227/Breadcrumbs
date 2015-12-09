@@ -102,12 +102,8 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         if (!accessToken) {
             $state.go('login');
         } else {
-            //ena = 6865520
-
             // base URL for self
             var selfBaseURL = 'https://api.instagram.com/v1/users/402726334/?access_token=';
-
-            
 
             // base URL for self recent
             var selfMediaBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
@@ -136,18 +132,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 }, function (error) {
                     console.log(error);
                 });
-
-
-            // var userId = 402726334;
-            // var userBaseURL = 'https://api.instagram.com/v1/' + userId + '/self/?access_token=';
-            // getUserData(userBaseURL)
-            //     .then(function (response) {
-            //         console.log(response);
-            //     }, function (error) {
-            //         console.log(error);
-            //     });
-
-
         }
 
         // navbar collapse code
@@ -156,7 +140,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         // user logout
         $scope.logout = function() {
             window.localStorage.setItem('accessToken', '');
-
             $state.go('login');
         };
 
