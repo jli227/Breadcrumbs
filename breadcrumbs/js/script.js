@@ -1,8 +1,8 @@
-angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
+angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .factory('getUserData', function ($http) {
         return function (baseUrl) {
-            var accessToken = window.localStorage.getItem('accessToken')
-                endUrl = '&callback=JSON_CALLBACK';            
+            var accessToken = window.localStorage.getItem('accessToken'),
+                endUrl = '&callback=JSON_CALLBACK';
             return new Promise(function (resolve, reject) {
                 $http.jsonp(baseUrl + accessToken + endUrl)
                     .then(function (response) {
@@ -10,8 +10,8 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                     }, function (error) {
                         reject(error);
                     });
-            }); 
-       }        
+            });
+        }
     })
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
@@ -40,10 +40,15 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                 templateUrl: 'views/vince.html',
                 controller: 'VController'
             })
-            .state('main.johnathan', {
-                url: '/johnathan',
-                templateUrl: 'views/johnathan.html',
+            .state('main.jonathan', {
+                url: '/jonathan',
+                templateUrl: 'views/jonathan.html',
                 controller: 'JController'
+            })
+            .state('privacy', {
+                url: '/privacy',
+                templateUrl: 'views/privacy.html',
+                controller: "MainController"
             });
 
         //TODO create controllers
@@ -66,15 +71,22 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                 maybe we should just comment out each others while we are developing?
          */
 
-            //TODO create paintberi instagram account to make universal clientID
+            // paintberi's client stuff
+            var clientID = 'b1401358fc42419a8dfbd3ed74b69228';
+            // WebStorm
+            var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
 
-            //ena's client stuff
-            //var clientID = 'e2fad0935d07402c9c5a68287915d997';
-            //var redirectUrl = 'http://localhost:8000/insta-oauth.html';
+            // Sublime
+            // var redirectUrl = 'http://localhost:8000/insta-oauth.html';
 
-            //vince's client stuff
-             var clientID = 'ab1c06711b0046b995f3b42fd2ee5b33';
-             var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
+
+            // ena's client stuff
+            // var clientID = 'e2fad0935d07402c9c5a68287915d997';
+            // var redirectUrl = 'http://localhost:8000/insta-oauth.html';
+
+            // vince's client stuff
+            // var clientID = 'ab1c06711b0046b995f3b42fd2ee5b33';
+            // var redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
 
             var url = 'https://instagram.com/oauth/authorize/?client_id=' + 
                         clientID + '&scope=basic+public_content&redirect_uri=' +
@@ -136,7 +148,42 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
 
     })
     .controller('EController', function ($scope, getUserData) {
-        
+        var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
+        getUserData(getMediaUrl)
+            .then(function (response) {
+                console.log(response);
+                var data = [];
+                response.forEach(function (post) {
+                    var time = moment.unix(post.created_time); 
+                    var hour = time.hour();
+                    var minute = time.minute();     
+
+                    var label = (hour > 12) ? hour - 12 : hour;
+                    label += ':';
+                    label += (minute < 10) ? '0' + minute : minute;
+                    label += (hour > 12) ? ' PM' : ' AM';
+
+                    data.push({
+                        hour: hour,
+                        minute: minute,
+                        label: label,
+                        likes: post.likes.count,
+                        info: post
+                    });                    
+                });   
+                data = _.sortByAll(data, ['hour', 'minute']);
+                
+                $scope.labels = _.pluck(data, 'label');
+                $scope.data = [_.pluck(data, 'likes')];
+                $scope.series = ['Time vs. Likes'];
+                $scope.onClick = function (points, evt) {
+                    console.log(points, evt);
+                };
+
+                $scope.$apply();
+            }, function (error) {
+                console.log(error);
+            }); 
     })
     .controller('VController', function ($scope) {
 

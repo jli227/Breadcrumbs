@@ -37,3 +37,7 @@ img {
 .thumbnail {
     margin-bottom: 0.5em;
 }
+
+.jumbotron {
+    margin-top: 80px;
+}

@@ -12,11 +12,12 @@
         <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">home</a></li>
+                <li><a ui-sref="privacy()">Privacy Policy</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
 
-                <li><a href='https://www.instagram.com/accounts/logout/' ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
+                <li><a href="https://www.instagram.com/accounts/logout/" ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
             </ul>
         </div>
     </div>
@@ -34,7 +35,7 @@
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.photos()">Photos</a></li>
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.ena()">Ena's</a></li>
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.vince()">Vincent's</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main.johnathan()">Johnathan's</a></li>
+        <li role="presentation" ui-sref-active="active"><a ui-sref="main.jonathan()">Jonathan's</a></li>
     </ul>
 
     <div ui-view></div>

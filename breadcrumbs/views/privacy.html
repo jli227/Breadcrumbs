@@ -1,0 +1,33 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" ng-click="isCollapsed = !isCollapsed">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">breadcrumbs</a>
+        </div>
+        <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
+            <ul class="nav navbar-nav">
+                <li><a ui-sref="main()" href="#">home</a></li>
+                <li class="active"><a href="#" ui-sref="privacy()">Privacy Policy</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
+
+                <li><a ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+
+	<div class="jumbotron">		
+		<h1>Privacy Policy</h1>
+		<p>
+			We do not sell or give user information to third-parties. We do not store your login credentials. 		All data collected is the data allowed by the Instagram API. All information used is to personalize user experience on our website.
+		</p>
+	</div>
+</div>
