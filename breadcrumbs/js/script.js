@@ -1,4 +1,4 @@
-angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
+angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .factory('getUserData', function ($http) {
         return function (baseUrl) {
             var accessToken = window.localStorage.getItem('accessToken')
@@ -44,6 +44,11 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
                 url: '/johnathan',
                 templateUrl: 'views/johnathan.html',
                 controller: 'JController'
+            })
+            .state('privacy', {
+                url: '/privacy',
+                templateUrl: 'views/privacy.html',
+                controller: "MainController"
             });
 
         //TODO create controllers
@@ -136,7 +141,46 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap'])
 
     })
     .controller('EController', function ($scope, getUserData) {
-        
+        $scope.labels;        
+        $scope.data;
+        $scope.series;
+
+        var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
+        getUserData(getMediaUrl)
+            .then(function (response) {
+                console.log(response);
+                var data = [];
+                response.forEach(function (post) {
+                    var time = moment.unix(post.created_time); 
+                    var hour = time.hour();
+                    var minute = time.minute();     
+
+                    var label = (hour > 12) ? hour - 12 : hour;
+                    label += ':';
+                    label += (minute < 10) ? '0' + minute : minute;
+                    label += (hour > 12) ? ' PM' : ' AM';
+
+                    data.push({
+                        hour: hour,
+                        minute: minute,
+                        label: label,
+                        likes: post.likes.count,
+                        info: post
+                    });                    
+                });   
+                data = _.sortByAll(data, ['hour', 'minute']);
+                
+                $scope.labels = _.pluck(data, 'label');
+                $scope.data = [_.pluck(data, 'likes')];
+                $scope.series = ['Time vs. Likes'];
+                $scope.onClick = function (points, evt) {
+                    console.log(points, evt);
+                }
+
+                $scope.$apply();
+            }, function (error) {
+                console.log(error);
+            }); 
     })
     .controller('VController', function ($scope) {
 
