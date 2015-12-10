@@ -36,31 +36,28 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 templateUrl: 'views/trends.html',
                 controller: 'TrendsController'
             })
-            .state('main.vince', {
-                url: '/vince',
-                templateUrl: 'views/vince.html',
-                controller: 'VController'
+            .state('main.activity', {
+                url: '/activity',
+                templateUrl: 'views/activity.html',
+                controller: 'ActivityController'
             })
             .state('main.jonathan', {
                 url: '/jonathan',
                 templateUrl: 'views/jonathan.html',
                 controller: 'JController'
-            })
+            })            
             .state('privacy', {
                 url: '/privacy',
                 templateUrl: 'views/privacy.html',
                 controller: "MainController"
             });
-
-        //TODO create controllers
         $urlRouterProvider.otherwise('/login');
     })
     .controller('LoginController', function($scope) {
         $scope.login = function() {
-            // paintberi's client stuff
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
                 redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html',
-                url = 'https://instagram.com/oauth/authorize/?client_id=' + 
+                url = 'https://instagram.com/oauth/authorize/?client_id=' +
                         clientID + '&redirect_uri=' + 
                         redirectUrl + '&response_type=token&scope=public_content';
 
@@ -101,7 +98,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
                 }, function (error) {
                     console.log(error);
-                });            
+                });
         }
 
         // navbar collapse code
@@ -112,15 +109,15 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             window.localStorage.setItem('accessToken', '');
             $state.go('login');
         };
-
     })
-    .controller('TrendsController', function ($scope, getUserData, InstaURL) {
+    .controller('TrendsController', function ($scope, getUserData, $state, InstaURL) {
         // "neater" way of creating the buckets?
         //var likesBucket = {};
         //for (var i = 1; i <= 24; i++) {
         //    likesBucket[i] =  {count: 0, sum: 0, avg: 0};
         //}
         var likesBucket = {
+                0: {count: 0, sum: 0, avg: 0},
                 1: {count: 0, sum: 0, avg: 0},
                 2: {count: 0, sum: 0, avg: 0},
                 3: {count: 0, sum: 0, avg: 0},
@@ -143,8 +140,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 20: {count: 0, sum: 0, avg: 0},
                 21: {count: 0, sum: 0, avg: 0},
                 22: {count: 0, sum: 0, avg: 0},
-                23: {count: 0, sum: 0, avg: 0},
-                24: {count: 0, sum: 0, avg: 0}
+                23: {count: 0, sum: 0, avg: 0}
             },
             filterBucket = {},
             getMediaUrl = InstaURL + 'media/recent/?access_token=';
@@ -152,7 +148,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             getUserData(getMediaUrl)
                 .then(function (response) {
                     var data = [];
-
                     response.forEach(function (post) {
                         var time = moment.unix(post.created_time), 
                             hour = time.hour(),
@@ -185,10 +180,79 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     $scope.$apply();
                 }, function (error) {
                     console.log(error);
-                });                     
-    })
-    .controller('VController', function ($scope) {
+                });  
 
+        $scope.likesOnClick = function (points, evt) {
+            console.log(points, evt);
+        }                   
+    })
+    .controller('ActivityController', function ($scope, getUserData) {
+        var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
+
+        getUserData(getMediaUrl).then(function(response) {
+            var dates = _.pluck(response, 'created_time').map(
+                function(item) {
+
+                    return moment.unix(item);
+                });
+
+            // date difference between most recent and most earliest posts
+            var dateDiffWeeksByYear = (dates[0] - dates[dates.length - 1]) / 604800000 / 52;
+            console.log(dates[0] - (dates[0] - 10000));
+
+            // max and min years of posts
+            var maxYear = dates[0].year();
+            var minYear = dates[dates.length - 1].year();
+
+            // fits the data depending on how spread apart the data is.
+            $scope.fitData = function(months) {
+                if (months) {
+                    dates.forEach(function(x) {
+                        var index = x.week() - 1;
+                        $scope.data[0][index]++;
+                    });
+
+                    $scope.labels = _.fill(Array(52), '');
+
+                    $scope.labels[0] = "January " + maxYear;
+                    $scope.labels[26] = "Mid " + maxYear;
+                    $scope.labels[51] = maxYear + 1;
+                } else {
+                    dates.forEach(function(x) {
+                        var year = maxYear - x.year();
+                        var index = ($scope.yearDateDiff - year - 1) * 51 + (x.week() - 1);
+
+                        $scope.data[0][index]++;
+                    });
+
+                    $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
+                    var count = 0;
+                    for (var idx = minYear; idx < maxYear; idx++) {
+                        var start = count * 51;
+                        $scope.labels[start] = "January " + idx;
+                        $scope.labels[start + 26] = "Mid " + idx;
+                        count++
+                    }
+                    $scope.labels[$scope.labels.length - 1] = maxYear;
+                    count = 0;
+                }
+            };
+
+            if (dateDiffWeeksByYear < 1) {
+                $scope.data = [_.fill(Array(52), 0)];
+
+                $scope.fitData(true);
+            } else {
+                $scope.yearDateDiff = Math.ceil(dateDiffWeeksByYear);
+                $scope.data = [_.fill(Array(52 * $scope.yearDateDiff), 0)];
+
+                $scope.fitData(false);
+            }
+            $scope.$apply();
+
+        }, function(error) {
+            console.log(error);
+        });
     })
     .controller('JController', function ($scope, getUserData, InstaURL) {
         var getMediaUrl = InstaURL + 'media/recent/?access_token=';

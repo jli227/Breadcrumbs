@@ -1,0 +1,110 @@
+@import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic);
+@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css);
+@import url(https://fonts.googleapis.com/css?family=Just+Another+Hand);
+
+body {
+    font-family: "Open Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    color: #193441;
+    background-color: #FCFFF5;
+    font-weight: 300;
+}
+
+.header {
+    background-color: #3e606F;
+    color: #FCFFF5;
+    padding-top: 8em;
+    padding-bottom: 8em;
+    /*border-bottom-left-radius: 50%;*/
+    /*border-bottom-right-radius: 50%;*/
+}
+
+.body-start {
+    padding-top: 70px;
+}
+
+h1, h2, h3 {
+    font-weight: 300;
+}
+
+.title {
+    font-family: "Just Another Hand";
+    font-size: 80px;
+}
+
+.navbar-brand {
+    font-weight: 300;
+}
+
+.follow-trail {
+    margin-left: auto;
+    margin-right: auto;
+    width: 10em;
+    height: 10em;
+    border-radius: 50%;
+    color: #FCFFF5;
+    background-color: #3E606F;
+}
+
+.follow-trail:hover {
+    background-color: #91AA9D;
+    cursor: pointer;
+    /*width: 12em;*/
+    /*height: 12em;*/
+    box-shadow:
+        inset 0 0 0 110px rgba(62,96,111, 0.4),
+        inset 0 0 0 16px rgba(209, 219, 189, 0.9),
+        0 1px 2px rgba(0,0,0,0.1);
+}
+
+.follow-trail-info {
+    padding-top: 4.5em;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.4s ease-in-out;
+    transform: scale(0);
+}
+
+.follow-trail:hover .follow-trail-info {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.fa-circle-thin:hover {
+    color: #91AA9D;
+}
+
+@media (max-width: 760px) {
+    body {
+        font-size: 12px;
+    }
+    .body-start {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    .header {
+        padding-top: 3em;
+        padding-bottom: 5em;
+    }
+
+    .follow-trail {
+        width: 5em;
+        height: 5em;
+    }
+
+    .follow-trail-info {
+        padding-top: 1.5em;
+    }
+
+    .follow-trail:hover {
+        box-shadow:
+                inset 0 0 0 55px rgba(62,96,111, 0.4),
+                inset 0 0 0 4px rgba(209, 219, 189, 0.9),
+                0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .col-sm-4 {
+        margin: 1em;
+    }
+}
