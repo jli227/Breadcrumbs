@@ -50,8 +50,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     })
     .controller('LoginController', function($scope) {
         $scope.login = function() {
-            // paintberi's client stuff
-
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
                 redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html',
                 url = 'https://instagram.com/oauth/authorize/?client_id=' +
@@ -178,11 +176,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     }
                 };
 
-                $scope.filterLabels = Object.keys(filterBucket);
-                $scope.filterData = [_.pluck(filterBucket, 'avg')];
-                $scope.filterSeries = ['Filter vs. Average Likes'];
-                
-
                 $scope.$apply();
             }, function (error) {
                 console.log(error);
@@ -218,7 +211,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
 
-                    $scope.labels = _.fill(Array(52), '');
+                    $scope.labels = _.fill(new Array(52), '');
                     $scope.labels[0] = "January " + maxYear;
                     $scope.labels[26] = "Mid " + maxYear;
                     $scope.labels[51] = maxYear + 1;
@@ -230,7 +223,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
 
-                    $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
+                    $scope.labels = _.fill(new Array(52 * $scope.yearDateDiff), '');
                     var count = 0;
                     for (var idx = minYear; idx < maxYear; idx++) {
                         var start = count * 51;
@@ -239,7 +232,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         count++
                     }
                     $scope.labels[$scope.labels.length - 1] = maxYear;
-                    count = 0; // can be removed, right?
                 }
             };
 
@@ -253,6 +245,19 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
                 $scope.fitData(false);
             }
+
+            // tags
+            var tags = _.flattenDeep(_.pluck(response, 'tags'));
+            var groupedTags = _.countBy(tags, function(n) {
+                return "#" + n;
+            });
+
+            $scope.tags = [];
+            $scope.tagValues = [];
+            _.forEach(groupedTags, function(value, key) {
+                $scope.tags.push(key);
+                $scope.tagValues.push(value);
+            });
 
             $scope.$apply();
         }, function(error) {
