@@ -250,7 +250,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
                 $scope.fitData(false);
             }
-            
+
             $scope.$apply();
         }, function(error) {
             console.log(error);
