@@ -181,18 +181,21 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     $scope.filterData = [_.pluck(filterBucket, 'avg')];
                     $scope.filterSeries = ['Filter vs. Average Likes'];
 
+                    $scope.options = {
+                        tooltipTemplate: function (label) {
+                            return 'Average likes : ' + round(label.value);
+                        }
+                    }
+
                     $scope.$apply();
                 }, function (error) {
                     console.log(error);
-                });  
+                }); 
 
-        $scope.likesOnClick = function (points, evt) {
-            console.log(points, evt);
+        function round(num) {
+            return Math.round(num * 100) / 100;
         } 
-
-        $scope.filterOnHover = function (points, evt) {
-            console.log(points, evt);
-        }                  
+                    
     })
     .controller('ActivityController', function ($scope, getUserData) {
         var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
