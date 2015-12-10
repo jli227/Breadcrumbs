@@ -173,7 +173,9 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         filterBucket[filter].avg = filterBucket[filter].sum / filterBucket[filter].count;
                     });
 
-                    $scope.likesLabels = Object.keys(likesBucket);
+                    $scope.likesLabels = Object.keys(likesBucket).map(function (key) {
+                        return key + ':00';
+                    });
                     $scope.likesData = [_.pluck(likesBucket, 'avg')];
                     $scope.likesSeries = ['Time vs. Average Likes'];
 
@@ -186,6 +188,11 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                             return 'Average likes : ' + round(label.value);
                         }
                     }
+
+                    $scope.filterLabels = Object.keys(filterBucket);
+                    $scope.filterData = [_.pluck(filterBucket, 'avg')];
+                    $scope.filterSeries = ['Filter vs. Average Likes'];
+                    
 
                     $scope.$apply();
                 }, function (error) {
