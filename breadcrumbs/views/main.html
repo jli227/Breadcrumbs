@@ -7,17 +7,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">breadcrumbs</a>
+            <a class="navbar-brand" ui-sref="login()">breadcrumbs</a>
         </div>
         <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#">home</a></li>
-                <li><a ui-sref="privacy()">Privacy Policy</a></li>
+                <li><a ui-sref="privacy()">privacy policy</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
 
-                <li><a href="https://www.instagram.com/accounts/logout/" ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
+                <li><a href="https://www.instagram.com/accounts/logout" ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
             </ul>
         </div>
     </div>
@@ -26,15 +26,13 @@
 <div id="logout"></div>
 
 <div class="body-start container text-center">
-    <div class="page-header">
-        <h1>Welcome {{currentUser.name}}</h1>
-        <img ng-src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
-    </div>
+    <h1>Welcome {{currentUser.name}}</h1>
+    <img ng-src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
 
-    <ul class="options nav nav-tabs nav-justified">
+    <ul class="vis-options options nav nav-tabs nav-justified">
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.photos()">Photos</a></li>
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.trends()">Trends</a></li>
-        <li role="presentation" ui-sref-active="active"><a ui-sref="main.vince()">Vincent's</a></li>
+        <li role="presentation" ui-sref-active="active"><a ui-sref="main.activity()">Activity</a></li>
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.jonathan()">Jonathan's</a></li>
     </ul>
 
