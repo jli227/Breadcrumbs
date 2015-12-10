@@ -261,6 +261,10 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 $scope.tagValues.push(value);
             });
 
+            if ($scope.tags.length === 0) {
+                $scope.emptyTags = true;
+            }
+
             $scope.$apply();
         }, function(error) {
             console.log(error);
