@@ -1,3 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Just+Another+Hand);
+@import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+
 body {
     font-family: "Open Sans", Helvetica, sans-serif;
     font-size: 16px;
@@ -24,6 +27,12 @@ h1, h2, h3 {
 .title {
     font-family: "Just Another Hand";
     font-size: 80px;
+}
+
+.info {
+    font-size: 20px;
+    width: 40%;
+    margin: auto;
 }
 
 .navbar-brand {

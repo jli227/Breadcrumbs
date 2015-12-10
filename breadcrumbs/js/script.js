@@ -49,6 +49,8 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         $urlRouterProvider.otherwise('/login');
     })
     .controller('LoginController', function($scope) {
+        $scope.loggedIn = window.localStorage.getItem('accessToken') != null;
+        console.log(window.localStorage.getItem('accessToken'));
         $scope.login = function() {
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
                 redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
@@ -72,7 +74,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             // get current user data from Instagram
             getUserData(selfBaseURL)
                 .then(function (response) {
-                    console.log(response);
                     $scope.currentUser = {
                         name: response.full_name.replace(/\b./g, function(text){ return text.toUpperCase(); }),
                         username: response.username,

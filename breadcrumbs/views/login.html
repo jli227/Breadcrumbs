@@ -7,13 +7,18 @@
 		<i class="fa fa-circle-thin"></i>
 		<i class="fa fa-circle-thin"></i>
 	</p>
+	<p class="info">
+		Beautiful data visualizations based off your
+		interactions on Instagram.
+	</p>
 </div>
 
 <div class="container text-center body-start">
 	<h2>follow the trail</h2>
 	<br>
 	<div class='follow-trail' ng-click="login()">
-		<h3>login</h3>
+		<h3 ng-if="!loggedIn">login</h3>
+		<h3 ng-if="loggedIn">Go back!</h3>
 		<div class="follow-trail-info"></div>
 	</div>
 </div>
