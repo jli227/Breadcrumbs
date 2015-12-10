@@ -183,9 +183,9 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     console.log(error);
                 });  
 
-        // $scope.likesOnClick = function (points, evt) {
-        //     console.log(points, evt);
-        // }                   
+        $scope.likesOnClick = function (points, evt) {
+            console.log(points, evt);
+        }                   
     })
     .controller('ActivityController', function ($scope, getUserData) {
         var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
