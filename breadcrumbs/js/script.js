@@ -44,7 +44,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 url: '/jonathan',
                 templateUrl: 'views/jonathan.html',
                 controller: 'JController'
-            })
+            })            
             .state('privacy', {
                 url: '/privacy',
                 templateUrl: 'views/privacy.html',
@@ -116,8 +116,9 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         };
 
     })
-    .controller('TrendsController', function ($scope, getUserData) {
+    .controller('TrendsController', function ($scope, getUserData, $state) {
         var likesBucket = {
+                0: {count: 0, sum: 0, avg: 0},
                 1: {count: 0, sum: 0, avg: 0},
                 2: {count: 0, sum: 0, avg: 0},
                 3: {count: 0, sum: 0, avg: 0},
@@ -140,15 +141,14 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 20: {count: 0, sum: 0, avg: 0},
                 21: {count: 0, sum: 0, avg: 0},
                 22: {count: 0, sum: 0, avg: 0},
-                23: {count: 0, sum: 0, avg: 0},
-                24: {count: 0, sum: 0, avg: 0}
+                23: {count: 0, sum: 0, avg: 0}
             },
             filterBucket = {},
             getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
             getUserData(getMediaUrl)
                 .then(function (response) {
-                    var data = [];
+                    
                     response.forEach(function (post) {
                         var time = moment.unix(post.created_time), 
                             hour = time.hour(),
@@ -181,7 +181,11 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     $scope.$apply();
                 }, function (error) {
                     console.log(error);
-                });                     
+                });  
+
+        // $scope.likesOnClick = function (points, evt) {
+        //     console.log(points, evt);
+        // }                   
     })
     .controller('VController', function ($scope, getUserData) {
         var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
