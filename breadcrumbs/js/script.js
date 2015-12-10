@@ -50,8 +50,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     })
     .controller('LoginController', function($scope) {
         $scope.login = function() {
-            // paintberi's client stuff
-
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
                 redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html',
                 url = 'https://instagram.com/oauth/authorize/?client_id=' +
@@ -90,9 +88,11 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 .then(function (response) {
                     var selfData = {
                         recentPhotos: _.pluck(response, 'images.standard_resolution.url'),
-                        recentLikes: _.pluck(response, 'likes.count')
-                    };                  
-                    $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
+                        recentLikes: _.pluck(response, 'likes.count'),
+                        photoLinks: _.pluck(response, 'link')
+                    };
+                    console.log(response);
+                    $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes, selfData.photoLinks);
                 }, function (error) {
                     console.log(error);
                 });
@@ -124,7 +124,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 response.forEach(function (post) {
                     var time = moment.unix(post.created_time), 
                         hour = time.hour(),
-                        minute = time.minute(),
                         likes = post.likes.count,
                         filter = post.filter,
                         location = post.location != null ? post.location : {name: "Unknown"};
@@ -148,8 +147,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         locationBuckets[location.name].sum = 0;
                     }
                     locationBuckets[location.name].count++;
-                    locationBuckets[location.name].sum += post.likes.count;
-                    locationBuckets[location.name].avg = locationBuckets[location.name].sum / locationBuckets[location.name].count;
+                    locationBuckets[location.name].sum += likes;
                 });
 
                 $scope.likesLabels = Object.keys(likesBucket).map(function (key) {
@@ -163,19 +161,20 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 $scope.filterSeries = ['Filter vs. Average Likes'];
 
                 $scope.locationLabels = Object.keys(locationBuckets);
-                $scope.locationData = [_.pluck(locationBuckets, 'avg')];
+                $scope.locationData = [_.pluck(locationBuckets, 'sum')];
                 $scope.locationSeries = ['Location vs. Likes'];
+
+                $scope.locationOptions = {
+                    tooltipTemplate: function(label) {
+                        return 'Total likes : ' + round(label.value);
+                    }
+                };
 
                 $scope.options = {
                     tooltipTemplate: function (label) {                            
                         return 'Average likes : ' + round(label.value);                            
                     }
                 };
-
-                $scope.filterLabels = Object.keys(filterBucket);
-                $scope.filterData = [_.pluck(filterBucket, 'avg')];
-                $scope.filterSeries = ['Filter vs. Average Likes'];
-                
 
                 $scope.$apply();
             }, function (error) {
@@ -212,7 +211,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
 
-                    $scope.labels = _.fill(Array(52), '');
+                    $scope.labels = _.fill(new Array(52), '');
                     $scope.labels[0] = "January " + maxYear;
                     $scope.labels[26] = "Mid " + maxYear;
                     $scope.labels[51] = maxYear + 1;
@@ -224,7 +223,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
 
-                    $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
+                    $scope.labels = _.fill(new Array(52 * $scope.yearDateDiff), '');
                     var count = 0;
                     for (var idx = minYear; idx < maxYear; idx++) {
                         var start = count * 51;
@@ -233,7 +232,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         count++
                     }
                     $scope.labels[$scope.labels.length - 1] = maxYear;
-                    count = 0; // can be removed, right?
                 }
             };
 
