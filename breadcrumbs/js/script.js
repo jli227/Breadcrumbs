@@ -53,7 +53,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         console.log(window.localStorage.getItem('accessToken'));
         $scope.login = function() {
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
-                redirectUrl = 'http://enamarkovic.com/paintberi/breadcrumbs/insta-oauth.html';
+                redirectUrl = 'http://www.students.washington.edu/em42/paintberi/breadcrumbs/insta-oauth.html';
             window.location.href = 'https://instagram.com/oauth/authorize/?client_id=' +
                 clientID + '&redirect_uri=' +
                 redirectUrl + '&response_type=token&scope=public_content';;
