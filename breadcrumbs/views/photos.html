@@ -1,9 +1,12 @@
-<h2>Your pictures</h2>
-<div ng-repeat="item in selfRecent">
-    <div class="col-xs-6 col-md-3 image-thumbnail">
-        <div class="thumbnail">
-            <a href="{{item[2]}}" target="_blank"><img ng-src="{{item[0]}}"></a>
-        </div>
-        <p>{{item[1]}} <i class="fa fa-heart"></i></p>
-    </div>
-</div>
+<h1 ng-if="noPosts">No photos found. Try uploading some! It's fun!</h1>
+<div ng-if="!noPosts">
+	<h2>Your pictures</h2>
+	<div ng-repeat="item in selfRecent">
+	    <div class="col-xs-6 col-md-3 image-thumbnail">
+	        <div class="thumbnail">
+	            <a href="{{item[2]}}" target="_blank"><img ng-src="{{item[0]}}"></a>
+	        </div>
+	        <p>{{item[1]}} <i class="fa fa-heart"></i></p>
+	    </div>
+	</div>
+</div>	

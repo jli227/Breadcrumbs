@@ -1,35 +1,38 @@
-<h2>When is your prime-time?</h2>
-<canvas
-	class="chart chart-line" 
-	chart-data="likesData"
- 	chart-labels="likesLabels" 
- 	chart-legend="true" 
- 	chart-series="likesSeries"
-	chart-options="options" 
-></canvas> 
+<h1 ng-if="noPosts">No data found, please upload photos to see your trends!</h1>
+<div ng-if="!noPosts">
+	<h2>When is your prime-time?</h2>
+	<canvas
+		class="chart chart-line" 
+		chart-data="likesData"
+	 	chart-labels="likesLabels" 
+	 	chart-legend="true" 
+	 	chart-series="likesSeries"
+		chart-options="options" 
+	></canvas> 
 
-<hr>
+	<hr>
 
-<h2>Filter for success?</h2>
-<canvas
-	id="bar" 
-	class="chart chart-bar"
-	chart-data="filterData"
- 	chart-labels="filterLabels" 
- 	chart-legend="true" 
- 	chart-series="filterSeries"
-	chart-options="options" 
-></canvas> 
+	<h2>Filter for success?</h2>
+	<canvas
+		id="bar" 
+		class="chart chart-bar"
+		chart-data="filterData"
+	 	chart-labels="filterLabels" 
+	 	chart-legend="true" 
+	 	chart-series="filterSeries"
+		chart-options="options" 
+	></canvas> 
 
-<hr>
-
-<h2>Where the likes at?</h2>
-<canvas 
-	id="locationVsLikes" 
-	class="chart chart-bar" 
-	chart-data="locationData" 
-	chart-labels="locationLabels" 
-	chart-legend="true" 
-	chart-series="locationSeries" 
-	chart-options="locationOptions"
-></canvas>
+	<hr>
+	
+	<h2>Where the likes at?</h2>
+	<canvas 
+		id="locationVsLikes" 
+		class="chart chart-bar" 
+		chart-data="locationData" 
+		chart-labels="locationLabels" 
+		chart-legend="true" 
+		chart-series="locationSeries" 
+		chart-options="options" 
+	></canvas>
+</div>

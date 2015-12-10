@@ -1,12 +1,15 @@
-<h2>How spread apart are your posts?</h2>
-<p>Each bar represents a week</p>
+<h1 ng-if="noPosts">No data found, please upload photos to see activity correlations!</h1>
+<div ng-if="!noPosts">
+	<h2>How spread apart are your posts?</h2>
+	<p>Each bar represents a week</p>
 
-<canvas id="activityBar" class="chart chart-bar"
-        chart-data="data" chart-labels="labels" chart-series="series">
-</canvas>
+	<canvas id="activityBar" class="chart chart-bar"
+	        chart-data="data" chart-labels="labels" chart-series="series">
+	</canvas>
 
-<h2>Which tags have you used?</h2>
-<p>Hover to see details</p>
-<canvas id="activityDoughnut" class="chart chart-doughnut"
-        chart-data="tagValues" chart-labels="tags">
-</canvas>
+	<h2>Which tags have you used?</h2>
+	<p ng-if="emptyTags">Looks like you haven't used any tags recently!</p>
+	<canvas id="activityDoughnut" class="chart chart-doughnut"
+	        chart-data="tagValues" chart-labels="tags">
+	</canvas>
+</div>	
