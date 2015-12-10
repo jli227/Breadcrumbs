@@ -56,6 +56,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .controller('LoginController', function($scope) {
         $scope.login = function() {
             // paintberi's client stuff
+
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
                 redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html',
                 url = 'https://instagram.com/oauth/authorize/?client_id=' +
@@ -211,6 +212,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         var index = x.week() - 1;
                         $scope.data[0][index]++;
                     });
+
                     $scope.labels = _.fill(Array(52), '');
                     $scope.labels[0] = "January " + maxYear;
                     $scope.labels[26] = "Mid " + maxYear;
@@ -232,17 +234,17 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         count++
                     }
                     $scope.labels[$scope.labels.length - 1] = maxYear;
-                    count = 0;
+                    count = 0; // can be removed, right?
                 }
             };
 
             if (dateDiffWeeksByYear < 1) {
-                $scope.data = [_.fill(Array(52), 0)];
+                $scope.data = [_.fill(new Array(52), 0)];
 
                 $scope.fitData(true);
             } else {
                 $scope.yearDateDiff = Math.ceil(dateDiffWeeksByYear);
-                $scope.data = [_.fill(Array(52 * $scope.yearDateDiff), 0)];
+                $scope.data = [_.fill(new Array(52 * $scope.yearDateDiff), 0)];
 
                 $scope.fitData(false);
             }
@@ -267,7 +269,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     locationBuckets[location.name].sum += post.likes.count;
                     locationBuckets[location.name].avg = locationBuckets[location.name].sum / locationBuckets[location.name].count;
                 });
-
                 $scope.locationLabels = Object.keys(locationBuckets);
                 $scope.locationData = [_.pluck(locationBuckets, 'avg')];
                 $scope.locationSeries = ['Location vs. Likes'];
