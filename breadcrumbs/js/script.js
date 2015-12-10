@@ -183,9 +183,9 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     console.log(error);
                 });  
 
-        // $scope.likesOnClick = function (points, evt) {
-        //     console.log(points, evt);
-        // }                   
+        $scope.likesOnClick = function (points, evt) {
+            console.log(points, evt);
+        }                   
     })
     .controller('VController', function ($scope) {
 
