@@ -103,9 +103,10 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
         // user logout
         $scope.logout = function() {
-            window.localStorage.setItem('accessToken', '');
-            $('#logout').html('<img src="https://www.instagram.com/accounts/logout/" width="0" height="0">');
+            window.localStorage.removeItem('accessToken');
+            var logoutWin = window.open('https://www.instagram.com/accounts/logout', '_blank');
             $state.go('login');
+            setTimeout(function() {logoutWin.close();}, 200);
         };
     })
     .controller('TrendsController', function ($scope, getUserData, $state, InstaURL) {
