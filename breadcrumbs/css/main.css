@@ -3,6 +3,7 @@
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css);
 @import url(https://fonts.googleapis.com/css?family=Just+Another+Hand);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,100,300italic);
+@import url(https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.css);
 
 body {
     font-family: "Open Sans", Helvetica, sans-serif;

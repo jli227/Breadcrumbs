@@ -41,7 +41,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 templateUrl: 'views/activity.html',
                 controller: 'ActivityController'
             })           
-            .state('privacy', {
+            .state('main.privacy', {
                 url: '/privacy',
                 templateUrl: 'views/privacy.html',
                 controller: "MainController"
@@ -51,12 +51,10 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .controller('LoginController', function($scope) {
         $scope.login = function() {
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
-                redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html',
-                url = 'https://instagram.com/oauth/authorize/?client_id=' +
-                        clientID + '&redirect_uri=' + 
-                        redirectUrl + '&response_type=token&scope=public_content';
-
-            window.location.href = url;
+                redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
+            window.location.href = 'https://instagram.com/oauth/authorize/?client_id=' +
+                clientID + '&redirect_uri=' +
+                redirectUrl + '&response_type=token&scope=public_content';;
         }
     })
     .controller('MainController', function($scope, $state, $http, getUserData, InstaURL) {
@@ -91,7 +89,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         recentLikes: _.pluck(response, 'likes.count'),
                         photoLinks: _.pluck(response, 'link')
                     };
-                    console.log(response);
                     $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes, selfData.photoLinks);
                 }, function (error) {
                     console.log(error);
@@ -106,7 +103,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             window.localStorage.removeItem('accessToken');
             var logoutWin = window.open('https://www.instagram.com/accounts/logout', '_blank');
             $state.go('login');
-            setTimeout(function() {logoutWin.close();}, 200);
+            setTimeout(function() {logoutWin.close();}, 500);
         };
     })
     .controller('TrendsController', function ($scope, getUserData, $state, InstaURL) {
@@ -120,31 +117,26 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         }
 
         getUserData(getMediaUrl)
-            .then(function (response) {                
-                response.forEach(function (post) {
-                    var time = moment.unix(post.created_time), 
-                        hour = time.hour(),
+            .then(function(response) {
+                response.forEach(function(post) {
+                    var time = new Date(post.created_time * 1000),
+                        hour = time.getHours(),
                         likes = post.likes.count,
                         filter = post.filter,
                         location = post.location != null ? post.location : {name: "Unknown"};
-
                     likesBucket[hour].count++;
                     likesBucket[hour].sum += likes;
                     likesBucket[hour].avg = likesBucket[hour].sum / likesBucket[hour].count;             
 
                     if (!filterBucket[filter]) {
-                        filterBucket[filter] = {};
-                        filterBucket[filter].count = 0;
-                        filterBucket[filter].sum = 0;
+                        filterBucket[filter] = {count: 0, sum: 0};
                     }
                     filterBucket[filter].count++;
                     filterBucket[filter].sum += likes;
                     filterBucket[filter].avg = filterBucket[filter].sum / filterBucket[filter].count;
 
                     if (!locationBuckets[location]) {
-                        locationBuckets[location.name] = {};
-                        locationBuckets[location.name].count = 0;
-                        locationBuckets[location.name].sum = 0;
+                        locationBuckets[location.name] = {count : 0, sum: 0};
                     }
                     locationBuckets[location.name].count++;
                     locationBuckets[location.name].sum += likes;
@@ -186,28 +178,28 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         } 
                     
     })
-    .controller('ActivityController', function ($scope, getUserData) {
-        var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
+    .controller('ActivityController', function ($scope, getUserData, InstaURL) {
+        var getMediaUrl = InstaURL + 'media/recent/?access_token=';
 
         // get user most recent post
         getUserData(getMediaUrl).then(function(response) {
             var dates = _.pluck(response, 'created_time').map(
                 function(item) {
-                    return moment.unix(item);
+                    return new Date(item * 1000);
                 });
 
             // date difference between most recent and most earliest posts
             var dateDiffWeeksByYear = (dates[0] - dates[dates.length - 1]) / 604800000 / 52;
 
             // max and min years of posts
-            var maxYear = dates[0].year();
-            var minYear = dates[dates.length - 1].year();
+            var maxYear = dates[0].getYear();
+            var minYear = dates[dates.length - 1].getYear();
 
             // fits the data depending on how spread apart the data is.
             $scope.fitData = function(moreThanYear) {
                 if (moreThanYear) {
                     dates.forEach(function(x) {
-                        var index = x.week() - 1;
+                        var index = Math.ceil((((x-new Date(x.getFullYear(),0,1))/8.64e7)+1)/7) - 2;
                         $scope.data[0][index]++;
                     });
 
@@ -217,9 +209,9 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     $scope.labels[51] = maxYear + 1;
                 } else {
                     dates.forEach(function(x) {
-                        var year = maxYear - x.year();
-                        var index = ($scope.yearDateDiff - year - 1) * 51 + (x.week() - 1);
-
+                        var year = maxYear - x.getYear();
+                        var index = ($scope.yearDateDiff - year - 1) * 51 +
+                            (Math.ceil((((x-new Date(x.getFullYear(),0,1))/8.64e7)+1)/7) - 2);
                         $scope.data[0][index]++;
                     });
 
