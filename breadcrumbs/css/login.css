@@ -13,7 +13,7 @@ body {
     background-color: #3e606F;
     color: #FCFFF5;
     padding-top: 8em;
-    padding-bottom: 8em;
+    padding-bottom: 6em;
 }
 
 .body-start {
@@ -33,6 +33,7 @@ h1, h2, h3 {
     font-size: 20px;
     width: 40%;
     margin: auto;
+    padding-top: 3em;
 }
 
 .navbar-brand {
