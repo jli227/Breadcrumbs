@@ -13,6 +13,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             });
         }
     })
+    .constant("InstaURL", 'https://api.instagram.com/v1/users/self/')
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('login', {
@@ -50,8 +51,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 templateUrl: 'views/privacy.html',
                 controller: "MainController"
             });
-
-        //TODO create controllers
         $urlRouterProvider.otherwise('/login');
     })
     .controller('LoginController', function($scope) {
@@ -67,7 +66,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             window.location.href = url;
         }
     })
-    .controller('MainController', function($scope, $state, $http, getUserData) {
+    .controller('MainController', function($scope, $state, $http, getUserData, InstaURL) {
         // retrieve access token from local storage
         var accessToken = window.localStorage.getItem('accessToken');
 
@@ -75,10 +74,9 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             $state.go('login');
         } else {
             // base URL for self
-
-            var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=',
+            var selfBaseURL = InstaURL + '?access_token=',
             // base URL for self recent
-                selfMediaBaseURL = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';    
+                selfMediaBaseURL = InstaURL + 'media/recent/?access_token=';
 
             // get current user data from Instagram
             getUserData(selfBaseURL)
@@ -95,7 +93,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             // get most recent posts
             getUserData(selfMediaBaseURL)
                 .then(function (response) {
-                    // console.log(response);
                     var selfData = {
                         recentPhotos: _.pluck(response, 'images.standard_resolution.url'),
                         recentLikes: _.pluck(response, 'likes.count')
@@ -116,9 +113,13 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             $('#logout').html('<img src="https://www.instagram.com/accounts/logout/" width="0" height="0">');
             $state.go('login');
         };
-
     })
-    .controller('TrendsController', function ($scope, getUserData, $state) {
+    .controller('TrendsController', function ($scope, getUserData, $state, InstaURL) {
+        // "neater" way of creating the buckets?
+        //var likesBucket = {};
+        //for (var i = 1; i <= 24; i++) {
+        //    likesBucket[i] =  {count: 0, sum: 0, avg: 0};
+        //}
         var likesBucket = {
                 0: {count: 0, sum: 0, avg: 0},
                 1: {count: 0, sum: 0, avg: 0},
@@ -146,7 +147,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 23: {count: 0, sum: 0, avg: 0}
             },
             filterBucket = {},
-            getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
+            getMediaUrl = InstaURL + 'media/recent/?access_token=';
 
             getUserData(getMediaUrl)
                 .then(function (response) {
@@ -170,7 +171,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         filterBucket[filter].count++;
                         filterBucket[filter].sum += likes;
                         filterBucket[filter].avg = filterBucket[filter].sum / filterBucket[filter].count;
-                    });   
+                    });
 
                     $scope.likesLabels = Object.keys(likesBucket);
                     $scope.likesData = [_.pluck(likesBucket, 'avg')];
@@ -196,7 +197,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         getUserData(getMediaUrl).then(function(response) {
             var dates = _.pluck(response, 'created_time').map(
                 function(item) {
-
                     return moment.unix(item);
                 });
 
@@ -216,7 +216,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     });
 
                     $scope.labels = _.fill(Array(52), '');
-
                     $scope.labels[0] = "January " + maxYear;
                     $scope.labels[26] = "Mid " + maxYear;
                     $scope.labels[51] = maxYear + 1;
@@ -237,28 +236,46 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         count++
                     }
                     $scope.labels[$scope.labels.length - 1] = maxYear;
-                    count = 0;
+                    count = 0; // can be removed, right?
                 }
             };
 
             if (dateDiffWeeksByYear < 1) {
-                $scope.data = [_.fill(Array(52), 0)];
+                $scope.data = [_.fill(new Array(52), 0)];
 
                 $scope.fitData(true);
             } else {
                 $scope.yearDateDiff = Math.ceil(dateDiffWeeksByYear);
-                $scope.data = [_.fill(Array(52 * $scope.yearDateDiff), 0)];
+                $scope.data = [_.fill(new Array(52 * $scope.yearDateDiff), 0)];
 
                 $scope.fitData(false);
             }
-
+            
             $scope.$apply();
-
         }, function(error) {
             console.log(error);
         });
     })
-    .controller('JController', function ($scope) {
+    .controller('JController', function ($scope, getUserData, InstaURL) {
+        var getMediaUrl = InstaURL + 'media/recent/?access_token=';
+        var locationBuckets = {};
+        getUserData(getMediaUrl)
+            .then(function(response) {
+                response.forEach(function(post) {
+                    var location = post.location  != null ? post.location : {name: "Unknown"};
+                    if (!locationBuckets[location]) {
+                        locationBuckets[location.name] = {};
+                        locationBuckets[location.name].count = 0;
+                        locationBuckets[location.name].sum = 0;
+                    }
+                    locationBuckets[location.name].count++;
+                    locationBuckets[location.name].sum += post.likes.count;
+                    locationBuckets[location.name].avg = locationBuckets[location.name].sum / locationBuckets[location.name].count;
+                });
+                $scope.locationLabels = Object.keys(locationBuckets);
+                $scope.locationData = [_.pluck(locationBuckets, 'avg')];
+                $scope.locationSeries = ['Location vs. Likes'];
 
-
+                $scope.$apply();
+            });
     });
