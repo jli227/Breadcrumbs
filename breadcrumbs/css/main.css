@@ -55,3 +55,11 @@ hr {
         display: none;
     }
 }
+
+h3 a:hover, h3 a:focus {
+    text-decoration: none;
+}
+
+#largeProfilePic:hover {
+    cursor: pointer;
+}

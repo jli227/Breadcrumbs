@@ -106,6 +106,10 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         // navbar collapse code
         $scope.isCollapsed = true;
 
+        $scope.instaLink = function() {
+            window.open('https://www.instagram.com/' + $scope.currentUser.username);
+        };
+
         // user logout
         $scope.logout = function() {
             window.localStorage.removeItem('accessToken');
