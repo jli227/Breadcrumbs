@@ -1,8 +1,7 @@
 @import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic);
 @import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css);
-@import url(https://fonts.googleapis.com/css?family=Just+Another+Hand);
-@import url(https://fonts.googleapis.com/css?family=Lato:400,300,100,300italic);
+@import url(https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.css);
 
 body {
     font-family: "Open Sans", Helvetica, sans-serif;
@@ -23,8 +22,7 @@ h1, h2, h3 {
 }
 
 img {
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
 }
 
 #navbar-user-pic {
@@ -50,4 +48,18 @@ hr {
     margin-bottom: 10px;
     border-top: 1px solid #CCC;
     border-bottom: 1px solid #FFF;
+}
+
+@media (max-width: 760px) {
+    #navbar-user-pic {
+        display: none;
+    }
+}
+
+h3 a:hover, h3 a:focus {
+    text-decoration: none;
+}
+
+#largeProfilePic:hover {
+    cursor: pointer;
 }

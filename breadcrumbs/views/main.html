@@ -11,11 +11,11 @@
         </div>
         <div id="navbar" class="navbar-collapse" uib-collapse="isCollapsed">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">home</a></li>
-                <li><a ui-sref="privacy()">privacy policy</a></li>
+                <li class="active"><a ui-sref="main.photos()">home</a></li>
+                <li><a ui-sref="main.privacy()">privacy policy</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"></li>
+                <li><img ng-src="{{currentUser.profPic}}" alt="navbar profile pic" id="navbar-user-pic" class="img img-responsive img-circle"/></li>
                 <li><a href="#" ng-click="logout()">{{currentUser.name}} (click to sign out)</a></li>
             </ul>
         </div>
@@ -26,7 +26,8 @@
 
 <div class="body-start container text-center">
     <h1>Welcome {{currentUser.name}}!</h1>
-    <img ng-src="{{currentUser.profPic}}" alt="profile picture" class="img img-responsive img-circle">
+    <h3><a href="https://www.instagram.com/{{currentUser.username}}" target="_blank">{{currentUser.username}}</a></h3>
+    <img id="largeProfilePic" ng-src="{{currentUser.profPic}}" ng-click="instaLink()" alt="profile picture" class="img img-responsive img-circle"/>
 
     <ul class="vis-options options nav nav-tabs nav-justified">
         <li role="presentation" ui-sref-active="active"><a ui-sref="main.photos()">Photos</a></li>
