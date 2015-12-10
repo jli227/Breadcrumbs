@@ -170,7 +170,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     tooltipTemplate: function (label) {                            
                         return 'Average likes : ' + round(label.value);                            
                     }
-                }
+                };
 
                 $scope.filterLabels = Object.keys(filterBucket);
                 $scope.filterData = [_.pluck(filterBucket, 'avg')];
@@ -247,6 +247,19 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
                 $scope.fitData(false);
             }
+
+            // tags
+            var tags = _.flattenDeep(_.pluck(response, 'tags'));
+            var groupedTags = _.countBy(tags, function(n) {
+                return "#" + n;
+            });
+
+            $scope.tags = [];
+            $scope.tagValues = [];
+            _.forEach(groupedTags, function(value, key) {
+                $scope.tags.push(key);
+                $scope.tagValues.push(value);
+            });
 
             $scope.$apply();
         }, function(error) {
