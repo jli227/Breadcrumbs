@@ -109,6 +109,8 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         // user logout
         $scope.logout = function() {
             window.localStorage.setItem('accessToken', '');
+
+            $('#logout').html('<img src="https://www.instagram.com/accounts/logout/" width="0" height="0">');
             $state.go('login');
         };
     })
@@ -191,6 +193,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .controller('ActivityController', function ($scope, getUserData) {
         var getMediaUrl = 'https://api.instagram.com/v1/users/self/media/recent/?access_token=';
 
+        // get user most recent post
         getUserData(getMediaUrl).then(function(response) {
             var dates = _.pluck(response, 'created_time').map(
                 function(item) {
@@ -199,15 +202,14 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
             // date difference between most recent and most earliest posts
             var dateDiffWeeksByYear = (dates[0] - dates[dates.length - 1]) / 604800000 / 52;
-            console.log(dates[0] - (dates[0] - 10000));
 
             // max and min years of posts
             var maxYear = dates[0].year();
             var minYear = dates[dates.length - 1].year();
 
             // fits the data depending on how spread apart the data is.
-            $scope.fitData = function(months) {
-                if (months) {
+            $scope.fitData = function(moreThanYear) {
+                if (moreThanYear) {
                     dates.forEach(function(x) {
                         var index = x.week() - 1;
                         $scope.data[0][index]++;
@@ -248,6 +250,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
                 $scope.fitData(false);
             }
+
             $scope.$apply();
         }, function(error) {
             console.log(error);
