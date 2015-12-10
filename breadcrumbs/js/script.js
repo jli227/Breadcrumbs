@@ -197,34 +197,60 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     return moment.unix(item);
                 });
 
+            // date difference between most recent and most earliest posts
             var dateDiffWeeksByYear = (dates[0] - dates[dates.length - 1]) / 604800000 / 52;
+            console.log(dates[0] - (dates[0] - 10000));
+
+            // max and min years of posts
             var maxYear = dates[0].year();
             var minYear = dates[dates.length - 1].year();
 
-            if (dateDiffWeeksByYear <= 1) {
+            // fits the data depending on how spread apart the data is.
+            $scope.fitData = function(months) {
+                if (months) {
+                    dates.forEach(function(x) {
+                        var index = x.week() - 1;
+                        $scope.data[0][index]++;
+                    });
+
+                    $scope.labels = _.fill(Array(52), '');
+
+                    $scope.labels[0] = "January " + maxYear;
+                    $scope.labels[26] = "Mid " + maxYear;
+                    $scope.labels[51] = maxYear + 1;
+                } else {
+                    dates.forEach(function(x) {
+                        var year = maxYear - x.year();
+                        var index = ($scope.yearDateDiff - year - 1) * 51 + (x.week() - 1);
+
+                        $scope.data[0][index]++;
+                    });
+
+                    $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
+                    var count = 0;
+                    for (var idx = minYear; idx < maxYear; idx++) {
+                        var start = count * 51;
+                        $scope.labels[start] = "January " + idx;
+                        $scope.labels[start + 26] = "Mid " + idx;
+                        count++
+                    }
+                    $scope.labels[$scope.labels.length - 1] = maxYear;
+                    count = 0;
+                }
+            };
+
+            if (dateDiffWeeksByYear < 1) {
                 $scope.data = [_.fill(Array(52), 0)];
+
+                $scope.fitData(true);
             } else {
                 $scope.yearDateDiff = Math.ceil(dateDiffWeeksByYear);
                 $scope.data = [_.fill(Array(52 * $scope.yearDateDiff), 0)];
+
+                $scope.fitData(false);
             }
 
-            dates.forEach(function(x) {
-                var year = maxYear - x.year();
-                var index = ($scope.yearDateDiff - year - 1) * 51 + (x.week() - 1);
 
-                $scope.data[0][index]++;
-            });
-
-            $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
-            var count = 0;
-            for (var idx = minYear; idx < maxYear; idx++) {
-                var start = count * 51;
-                $scope.labels[start] = "January " + idx;
-                $scope.labels[start + 26] = "Mid " + idx;
-                count++
-            }
-            $scope.labels[$scope.labels.length - 1] = maxYear;
-            count = 0;
 
 
             $scope.$apply();
