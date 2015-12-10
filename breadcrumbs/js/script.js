@@ -53,7 +53,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         console.log(window.localStorage.getItem('accessToken'));
         $scope.login = function() {
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
-                redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html';
+                redirectUrl = 'breadcrumbs/insta-oauth.html';
             window.location.href = 'https://instagram.com/oauth/authorize/?client_id=' +
                 clientID + '&redirect_uri=' +
                 redirectUrl + '&response_type=token&scope=public_content';;
@@ -217,7 +217,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
 
-                    $scope.labels = _.fill(Array(52), '');
+                    $scope.labels = _.fill(new Array(52), '');
                     $scope.labels[0] = "January " + maxYear;
                     $scope.labels[26] = "Mid " + maxYear;
                     $scope.labels[51] = maxYear + 1;
@@ -229,7 +229,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
 
-                    $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
+                    $scope.labels = _.fill(new Array(52 * $scope.yearDateDiff), '');
                     var count = 0;
                     for (var idx = minYear; idx < maxYear; idx++) {
                         var start = count * 51;
