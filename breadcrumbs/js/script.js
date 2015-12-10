@@ -72,8 +72,10 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             // get current user data from Instagram
             getUserData(selfBaseURL)
                 .then(function (response) {
+                    console.log(response);
                     $scope.currentUser = {
-                        name: response.username,
+                        name: response.full_name.replace(/\b./g, function(text){ return text.toUpperCase(); }),
+                        username: response.username,
                         id: response.id,
                         profPic: response.profile_picture
                     }
