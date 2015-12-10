@@ -55,11 +55,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     })
     .controller('LoginController', function($scope) {
         $scope.login = function() {
-<<<<<<< HEAD
-=======
             // paintberi's client stuff
-
->>>>>>> 1c056f1150609365f02655c5733bfe854972ccb4
             var clientID = 'b1401358fc42419a8dfbd3ed74b69228',
                 redirectUrl = 'http://localhost:8000/paintberi/breadcrumbs/insta-oauth.html',
                 url = 'https://instagram.com/oauth/authorize/?client_id=' +
@@ -77,12 +73,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             $state.go('login');
         } else {
             // base URL for self
-<<<<<<< HEAD
             var selfBaseURL = InstaURL + '?access_token=',
-=======
-
-            var selfBaseURL = 'https://api.instagram.com/v1/users/self/?access_token=',
->>>>>>> 1c056f1150609365f02655c5733bfe854972ccb4
             // base URL for self recent
                 selfMediaBaseURL = InstaURL + 'media/recent/?access_token=';
 
@@ -120,16 +111,12 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
             $state.go('login');
         };
     })
-<<<<<<< HEAD
     .controller('TrendsController', function ($scope, getUserData, $state, InstaURL) {
         // "neater" way of creating the buckets?
         //var likesBucket = {};
         //for (var i = 1; i <= 24; i++) {
         //    likesBucket[i] =  {count: 0, sum: 0, avg: 0};
         //}
-=======
-    .controller('TrendsController', function ($scope, getUserData, $state) {
->>>>>>> 1c056f1150609365f02655c5733bfe854972ccb4
         var likesBucket = {
                 0: {count: 0, sum: 0, avg: 0},
                 1: {count: 0, sum: 0, avg: 0},
@@ -206,7 +193,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
         getUserData(getMediaUrl).then(function(response) {
             var dates = _.pluck(response, 'created_time').map(
                 function(item) {
-
                     return moment.unix(item);
                 });
 
@@ -226,12 +212,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         $scope.data[0][index]++;
                     });
                     $scope.labels = _.fill(Array(52), '');
-
-=======
-
-                    $scope.labels = _.fill(Array(52), '');
-
->>>>>>> 1c056f1150609365f02655c5733bfe854972ccb4
                     $scope.labels[0] = "January " + maxYear;
                     $scope.labels[26] = "Mid " + maxYear;
                     $scope.labels[51] = maxYear + 1;
@@ -266,15 +246,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
                 $scope.fitData(false);
             }
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> 1c056f1150609365f02655c5733bfe854972ccb4
             $scope.$apply();
-
         }, function(error) {
             console.log(error);
         });
@@ -282,8 +254,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
     .controller('JController', function ($scope, getUserData, InstaURL) {
         var getMediaUrl = InstaURL + 'media/recent/?access_token=';
         var locationBuckets = {};
-
-<<<<<<< HEAD
         getUserData(getMediaUrl)
             .then(function(response) {
                 response.forEach(function(post) {
@@ -304,7 +274,4 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
                 $scope.$apply();
             });
-=======
-
->>>>>>> 1c056f1150609365f02655c5733bfe854972ccb4
     });
