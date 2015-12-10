@@ -184,11 +184,8 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     $scope.filterSeries = ['Filter vs. Average Likes'];
 
                     $scope.options = {
-                        tooltipTemplate: function (label) {
-                            if (label.value > 0) {
-                                return 'Average likes : ' + round(label.value);    
-                            }
-                            return false;                            
+                        tooltipTemplate: function (label) {                            
+                            return 'Average likes : ' + round(label.value);                            
                         }
                     }
 
