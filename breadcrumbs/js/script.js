@@ -90,9 +90,11 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 .then(function (response) {
                     var selfData = {
                         recentPhotos: _.pluck(response, 'images.standard_resolution.url'),
-                        recentLikes: _.pluck(response, 'likes.count')
-                    };                  
-                    $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes);
+                        recentLikes: _.pluck(response, 'likes.count'),
+                        photoLinks: _.pluck(response, 'link')
+                    };
+                    console.log(response);
+                    $scope.selfRecent = _.zip(selfData.recentPhotos, selfData.recentLikes, selfData.photoLinks);
                 }, function (error) {
                     console.log(error);
                 });
@@ -124,7 +126,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 response.forEach(function (post) {
                     var time = moment.unix(post.created_time), 
                         hour = time.hour(),
-                        minute = time.minute(),
                         likes = post.likes.count,
                         filter = post.filter,
                         location = post.location != null ? post.location : {name: "Unknown"};
@@ -148,8 +149,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         locationBuckets[location.name].sum = 0;
                     }
                     locationBuckets[location.name].count++;
-                    locationBuckets[location.name].sum += post.likes.count;
-                    locationBuckets[location.name].avg = locationBuckets[location.name].sum / locationBuckets[location.name].count;
+                    locationBuckets[location.name].sum += likes;
                 });
 
                 $scope.likesLabels = Object.keys(likesBucket).map(function (key) {
@@ -163,14 +163,20 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                 $scope.filterSeries = ['Filter vs. Average Likes'];
 
                 $scope.locationLabels = Object.keys(locationBuckets);
-                $scope.locationData = [_.pluck(locationBuckets, 'avg')];
+                $scope.locationData = [_.pluck(locationBuckets, 'sum')];
                 $scope.locationSeries = ['Location vs. Likes'];
+
+                $scope.locationOptions = {
+                    tooltipTemplate: function(label) {
+                        return 'Total likes : ' + round(label.value);
+                    }
+                };
 
                 $scope.options = {
                     tooltipTemplate: function (label) {                            
                         return 'Average likes : ' + round(label.value);                            
                     }
-                }
+                };
 
                 $scope.filterLabels = Object.keys(filterBucket);
                 $scope.filterData = [_.pluck(filterBucket, 'avg')];
