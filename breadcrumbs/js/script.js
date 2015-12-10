@@ -197,79 +197,79 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
 
         // get user most recent post
         getUserData(getMediaUrl).then(function(response) {
-            if (response.length === 0) {
-                $scope.noPosts = true;
-            } else {
-                var dates = _.pluck(response, 'created_time').map(
-                    function (item) {
-                        return new Date(item * 1000);
+            var dates = _.pluck(response, 'created_time').map(
+                function(item) {
+                    return moment.unix(item);
+                });
+
+            // date difference between most recent and most earliest posts
+            var dateDiffWeeksByYear = (dates[0] - dates[dates.length - 1]) / 604800000 / 52;
+
+            // max and min years of posts
+            var maxYear = dates[0].year();
+            var minYear = dates[dates.length - 1].year();
+
+            // fits the data depending on how spread apart the data is.
+            $scope.fitData = function(moreThanYear) {
+                if (moreThanYear) {
+                    dates.forEach(function(x) {
+                        var index = x.week() - 1;
+                        $scope.data[0][index]++;
                     });
 
-                // date difference between most recent and most earliest posts
-                var dateDiffWeeksByYear = (dates[0] - dates[dates.length - 1]) / 604800000 / 52;
-
-                // max and min years of posts
-                var maxYear = dates[0].getYear();
-                var minYear = dates[dates.length - 1].getYear();
-
-                // fits the data depending on how spread apart the data is.
-                $scope.fitData = function (moreThanYear) {
-                    if (moreThanYear) {
-                        dates.forEach(function (x) {
-                            var index = Math.ceil((((x - new Date(x.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7) - 2;
-                            $scope.data[0][index]++;
-                        });
-
-                        $scope.labels = _.fill(new Array(52), '');
-                        $scope.labels[0] = "January " + maxYear;
-                        $scope.labels[26] = "Mid " + maxYear;
-                        $scope.labels[51] = maxYear + 1;
-                    } else {
-                        dates.forEach(function (x) {
-                            var year = maxYear - x.getYear();
-                            var index = ($scope.yearDateDiff - year - 1) * 51 +
-                                (Math.ceil((((x - new Date(x.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7) - 2);
-                            $scope.data[0][index]++;
-                        });
-                        $scope.labels = _.fill(new Array(52 * $scope.yearDateDiff), '');
-                        var count = 0;
-                        for (var idx = minYear; idx < maxYear; idx++) {
-                            var start = count * 51;
-                            $scope.labels[start] = "January " + idx;
-                            $scope.labels[start + 26] = "Mid " + idx;
-                            count++
-                        }
-                        $scope.labels[$scope.labels.length - 1] = maxYear;
-                    }
-                };
-
-                if (dateDiffWeeksByYear < 1) {
-                    $scope.data = [_.fill(new Array(52), 0)];
-
-                    $scope.fitData(true);
+                    $scope.labels = _.fill(Array(52), '');
+                    $scope.labels[0] = "January " + maxYear;
+                    $scope.labels[26] = "Mid " + maxYear;
+                    $scope.labels[51] = maxYear + 1;
                 } else {
-                    $scope.yearDateDiff = Math.ceil(dateDiffWeeksByYear);
-                    $scope.data = [_.fill(new Array(52 * $scope.yearDateDiff), 0)];
-                    $scope.fitData(false);
+                    dates.forEach(function(x) {
+                        var year = maxYear - x.year();
+                        var index = ($scope.yearDateDiff - year - 1) * 51 + (x.week() - 1);
+
+                        $scope.data[0][index]++;
+                    });
+
+                    $scope.labels = _.fill(Array(52 * $scope.yearDateDiff), '');
+                    var count = 0;
+                    for (var idx = minYear; idx < maxYear; idx++) {
+                        var start = count * 51;
+                        $scope.labels[start] = "January " + idx;
+                        $scope.labels[start + 26] = "Mid " + idx;
+                        count++
+                    }
+                    $scope.labels[$scope.labels.length - 1] = maxYear;
+                    count = 0; // can be removed, right?
                 }
+            };
 
-                // tags
-                var tags = _.flattenDeep(_.pluck(response, 'tags'));
-                var groupedTags = _.countBy(tags, function (n) {
-                    return "#" + n;
-                });
+            if (dateDiffWeeksByYear < 1) {
+                $scope.data = [_.fill(new Array(52), 0)];
 
-                $scope.tags = [];
-                $scope.tagValues = [];
-                _.forEach(groupedTags, function (value, key) {
-                    $scope.tags.push(key);
-                    $scope.tagValues.push(value);
-                });
+                $scope.fitData(true);
+            } else {
+                $scope.yearDateDiff = Math.ceil(dateDiffWeeksByYear);
+                $scope.data = [_.fill(new Array(52 * $scope.yearDateDiff), 0)];
 
-                if ($scope.tags.length === 0) {
-                    $scope.emptyTags = true;
-                }
+                $scope.fitData(false);
             }
+
+            // tags
+            var tags = _.flattenDeep(_.pluck(response, 'tags'));
+            var groupedTags = _.countBy(tags, function (n) {
+                return "#" + n;
+            });
+
+            $scope.tags = [];
+            $scope.tagValues = [];
+            _.forEach(groupedTags, function (value, key) {
+                $scope.tags.push(key);
+                $scope.tagValues.push(value);
+            });
+
+            if ($scope.tags.length === 0) {
+                $scope.emptyTags = true;
+            }
+
             $scope.$apply();
         }, function(error) {
             console.log(error);
