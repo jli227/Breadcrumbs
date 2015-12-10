@@ -126,7 +126,7 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                         location = post.location != null ? post.location : {name: "Unknown"};
                     likesBucket[hour].count++;
                     likesBucket[hour].sum += likes;
-                    likesBucket[hour].avg = likesBucket[hour].sum / likesBucket[hour].count;             
+                    likesBucket[hour].avg = likesBucket[hour].sum / likesBucket[hour].count;
 
                     if (!filterBucket[filter]) {
                         filterBucket[filter] = {count: 0, sum: 0};
@@ -138,7 +138,6 @@ angular.module('BreadcrumbsApp', ['ui.router', 'ui.bootstrap', 'chart.js'])
                     if (!locationBuckets[location]) {
                         locationBuckets[location.name] = {count : 0, sum: 0};
                     }
-                    locationBuckets[location.name].count++;
                     locationBuckets[location.name].sum += likes;
                 });
 
